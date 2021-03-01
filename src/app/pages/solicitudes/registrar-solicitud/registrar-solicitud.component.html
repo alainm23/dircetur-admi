@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col">
+    <nb-card>
+      <nb-card-header>
+        Registrar Solicitud <br>
+        Los campos con (*) son requeridos.
+      </nb-card-header>
+      <nb-card-body>
+        <form [formGroup]="form">
+          <div class="form-group"> 
+            <label for="capacitacion" class="label">Tipo de Capacitación: *</label>
+            <select class="select-css" formControlName="capacitacion" fullWidth id="capacitacion">
+              <option *ngFor="let item of capacitaciones" [ngValue]="item">
+                {{ item.nombre }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group"> 
+            <label for="asunto" class="label">Asunto: *</label>
+            <select class="select-css" formControlName="asunto" fullWidth id="asunto">
+              <option *ngFor="let item of asuntos" [ngValue]="item">
+                {{ item.nombre }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="descripcion" class="label">Descripción: </label>
+            <textarea formControlName="descripcion" rows="5" nbInput fullWidth shape="rectangle" id="descripcion" placeholder="Ingresar Descripción"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="monto" class="label">Monto: *</label>
+            <input type="number" formControlName="monto" id="monto" nbInput fullWidth>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+    <div class="row">
+      <div class="col-6">
+        <button nbButton fullWidth status="danger">Cancelar</button>
+      </div>
+      <div class="col-6">
+        <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submit ()">Crear</button>
+      </div>
+    </div>
+  </div>
+</div>

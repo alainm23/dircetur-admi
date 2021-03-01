@@ -1,0 +1,192 @@
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card [nbSpinner]="is_upload" nbSpinnerStatus="primary">
+    <nb-card-header>Actualizar</nb-card-header>
+    <nb-card-body>
+      <form [formGroup]="form">
+        <div class="form-group">
+          <label for="descripcion" class="label">Descripcion:</label>
+          <textarea formControlName="descripcion" rows="3" nbInput fullWidth shape="rectangle" id="descripcion"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="categoria" class="label">Categoria:</label>
+          <select class="select-css"
+              formControlName="categoria"
+              fullWidth
+              (ngModelChange)="categoriaChanged ($event)"
+              id="categoria"
+              [compareWith]="compareWith">
+              <option *ngFor="let item of categorias" [ngValue]="item">
+              {{ item.nombre }}
+              </option>
+          </select>
+        </div>
+
+        <div class="form-group" [nbSpinner]="esta_distritos_cargando" nbSpinnerStatus="primary">
+          <label for="categoria" class="label">Sub Categoria:</label>
+          <select class="select-css"
+              formControlName="sub_categoria"
+              fullWidth
+              id="categoria"
+              [compareWith]="compareWith">
+              <option *ngFor="let item of subcategorias" [ngValue]="item">
+              {{ item.nombre }}
+              </option>
+          </select>
+        </div>
+      </form>
+    </nb-card-body>
+
+    <nb-card-footer *ngIf="uploadPercent !== 0">
+      <div class="form-group">
+        <nb-progress-bar [value]="uploadPercent" id="progress"></nb-progress-bar>
+      </div>
+    </nb-card-footer>
+
+    <nb-card-footer>
+      <div class="row">
+        <div class="col-6">
+          <button nbButton fullWidth status="danger" (click)="close_dialog (ref)">Cancelar</button>
+        </div>
+
+        <div class="col-6">
+          <button nbButton fullWidth status="primary" (click)="subir (ref)">Actualizar</button>
+        </div>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<div class="row">
+    <div class="col">
+      <nb-card>
+        <nb-card-header>
+          <div class="row">
+            <div class="col-9">
+              Documentos
+            </div>
+            <div class="col-3">
+              <button nbButton fullWidth size="tiny" (click)="agregar ()">Agregar</button>
+            </div>
+          </div>
+        </nb-card-header>
+      </nb-card>
+
+      <nb-card *ngIf="show_nuevo === true" [nbSpinner]="is_nuevo_loading" nbSpinnerStatus="primary">
+        <nb-card-body>
+          <div class="row">
+            <div class="col-3">
+                <div *ngIf="file == null" (click)="fileInput.click ()">
+                    <button style="margin-top: 1rem;" fullWidth size="tiny" nbButton>Seleccionar</button>
+                    <input hidden type="file" accept=".pdf, image/*, .xlsx, .xls" #fileInput (change)="changeListener($event)">
+                </div>
+
+                <div *ngIf="file != null">
+                    {{ file.name }}
+                    <button nbButton fullWidth status="danger" size="tiny" ghost (click)="eliminar_nuevo_file ()"><nb-icon icon="trash-outline"></nb-icon></button>
+                </div>
+            </div>
+
+            <div class="col-9">
+              <form [formGroup]="form">
+                <div class="form-group">
+                  <label for="descripcion" class="label">Descripcion:</label>
+                  <textarea formControlName="descripcion" rows="3" nbInput fullWidth shape="rectangle" id="descripcion"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="categoria" class="label">Categoria:</label>
+                  <select class="select-css"
+                      formControlName="categoria"
+                      fullWidth
+                      (ngModelChange)="categoriaChanged ($event)"
+                      id="categoria"
+                      [compareWith]="compareWith">
+                      <option *ngFor="let item of categorias" [ngValue]="item">
+                      {{ item.nombre }}
+                      </option>
+                  </select>
+                </div>
+
+                <div class="form-group" [nbSpinner]="esta_distritos_cargando" nbSpinnerStatus="primary">
+                  <label for="categoria" class="label">Sub Categoria:</label>
+                  <select class="select-css"
+                      formControlName="sub_categoria"
+                      fullWidth
+                      id="categoria"
+                      [compareWith]="compareWith">
+                      <option *ngFor="let item of subcategorias" [ngValue]="item">
+                      {{ item.nombre }}
+                      </option>
+                  </select>
+                </div>
+              </form>
+
+              <div class="row">
+                <div class="col-6 align-self-center">
+                  <nb-progress-bar [value]="uploadPercent" *ngIf="is_nuevo_loading"></nb-progress-bar>
+                </div>
+
+                <div class="col-3 align-self-center">
+                  <button nbButton fullWidth size="small" status="danger" (click)="cancelar_nuevo ()">Cancelar</button>
+                </div>
+
+                <div class="col-3 align-self-center">
+                  <button nbButton fullWidth size="small"  [disabled]="!form.valid" (click)="submit ()">Agregar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nb-card-body>
+      </nb-card>
+
+      <nb-card *ngFor="let item of items">
+        <nb-card-body>
+          <div class="row">
+            <div class="col">
+              <div class="form-group" style="display: grid">
+                <label class="label">Descripcion:</label>
+                {{ item.descripcion }}
+              </div>
+
+              <div class="form-group" style="display: grid">
+                <label class="label">Categoria:</label>
+                {{ item.categoria.nombre }}
+              </div>
+
+              <div class="form-group" style="display: grid">
+                <label class="label">Sub Categoria:</label>
+                {{ item?.sub_categoria?.nombre }}
+              </div>
+
+              <div class="form-group" style="display: grid">
+                <label class="label">Archivo:</label>
+                {{ item.file }}
+              </div>
+
+              <div class="form-group" style="display: grid">
+                <label class="label">URL:</label>
+                <a [href]="item.url">{{ item.url }}</a>
+              </div>
+            </div>
+          </div>
+        </nb-card-body>
+
+        <nb-card-footer>
+          <div class="row">
+            <div class="col-6">
+
+            </div>
+
+            <div class="col-3">
+              <button nbButton fullWidth size="small" status="danger" (click)="eliminar (item)">Eliminar</button>
+            </div>
+
+            <div class="col-3">
+              <button nbButton fullWidth size="small" (click)="actualizar (item, dialog)">Editar</button>
+            </div>
+          </div>
+        </nb-card-footer>
+      </nb-card>
+    </div>
+  </div>

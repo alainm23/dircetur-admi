@@ -1,0 +1,97 @@
+<div class="row">
+    <div class="col-4">
+      <nb-card>
+        <nb-card-header>
+          Categorias
+        </nb-card-header>
+        <nb-card-body>
+            <div class="form-group">
+              <label for="categoria" class="label">Seleccione una categoria:</label>
+              <nb-select [(ngModel)]="categoria_selected" fullWidth id="categoria" (ngModelChange)="submit ()">
+                <nb-option *ngFor="let item of categorias" [value]="item">
+                  {{ item.nombre }}
+                </nb-option>
+              </nb-select>
+            </div>
+          <!--div class="row">
+            <div class="col">
+              <button nbButton fullWidth status="primary" (click)="submit ()">Buscar</button>
+            </div>
+          </div-->
+        </nb-card-body>
+      </nb-card>
+    </div>
+  
+    <div class="col-8">
+      <nb-card>
+        <nb-card-header>
+          <div class="row">
+            <div class="col-10">
+              Preguntas de {{ categoria_selected.nombre }} ({{ items.length }})
+            </div>
+    
+            <div class="col-2">
+              <button nbButton fullWidth size="tiny" (click)="agregar_nuevo ()">Agregar</button>
+            </div>
+          </div>
+        </nb-card-header>
+      </nb-card>
+
+      <nb-card *ngIf="show_nuevo === true" [nbSpinner]="is_nuevo_loading" nbSpinnerStatus="primary">
+        <nb-card-body>
+          <form [formGroup]="form">
+            <div class="form-group">
+              <label for="pregunta" class="label">Pregunta:</label>
+              <input formControlName="pregunta" type="text" id="pregunta" nbInput fullWidth >
+            </div>
+  
+            <div class="form-group">
+              <label for="respuesta" class="label">Respuesta:</label>
+              <textarea formControlName="respuesta" rows="4" nbInput fullWidth shape="rectangle" id="respuesta"></textarea>
+            </div>
+          </form>
+          <div class="row">
+            <div class="col-6">
+  
+            </div>
+  
+            <div class="col-3">
+              <button nbButton fullWidth size="small" status="danger" (click)="cancelar_nuevo ()">Cancelar</button>
+            </div>
+  
+            <div class="col-3">
+              <button nbButton fullWidth size="small"  [disabled]="!form.valid" (click)="agregar_submit ()">Agregar</button>
+            </div>
+          </div>      
+        </nb-card-body>
+      </nb-card>
+
+      <nb-card *ngFor="let item of items" [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+        <nb-card-body>
+          <div class="form-group">
+            <label for="pregunta" class="label">Pregunta:</label>
+            <input [(ngModel)]="item.pregunta" type="text" id="pregunta" nbInput fullWidth >
+          </div>
+
+          <div class="form-group">
+            <label for="respuesta" class="label">Respuesta:</label>
+            <ckeditor [editor]="Editor" [config]="config" [(ngModel)]="item.respuesta"></ckeditor>
+          </div>
+  
+          <div class="row">
+            <div class="col-6">
+  
+            </div>
+  
+            <div class="col-3">
+              <button nbButton fullWidth size="small" status="danger" (click)="eliminar (item)">Eliminar</button>
+            </div>
+  
+            <div class="col-3">
+              <button nbButton fullWidth size="small" [disabled]="item.funcion === '' || item.descripcion === ''" (click)="actualizar (item)">Actualizar</button>
+            </div>
+          </div> 
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>

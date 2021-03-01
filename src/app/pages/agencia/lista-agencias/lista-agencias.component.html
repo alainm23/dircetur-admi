@@ -1,0 +1,932 @@
+<ng-template #dialog_message let-data let-ref="dialogRef">
+  <nb-card [nbSpinner]="is_upload" nbSpinnerStatus="primary">
+    <nb-card-header>
+      Mensaje
+    </nb-card-header>
+    <nb-card-body>
+      <textarea nbInput [(ngModel)]="data.item.rechazo_motivo" fullWidth placeholder="Textarea"></textarea>
+    </nb-card-body>
+    <nb-card-footer>
+      <button size="tiny" nbButton fullWidth status="primary" (click)="ref.close ()">Cancelar</button>
+      &nbsp;
+      <button size="tiny" [disabled]="data.item.rechazo_motivo === undefined || data.item.rechazo_motivo === ''" status="success" nbButton fullWidth (click)="rechazar (ref, data.item, data.ref)">Enviar</button>      
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card class="dialog" [nbSpinner]="is_upload" nbSpinnerStatus="primary">
+    <nb-card-header>
+      <div class="row">
+        <div class="col-9">
+          Agencia&nbsp;
+          <span *ngIf="data.item.registro_nuevo === '0'">- Registro nuevo</span><span *ngIf="data.item.registro_nuevo === '1'">- Actualizacion de datos</span>&nbsp;
+          <span *ngIf="data.item.solo_digital === undefined">- Canal Fisico</span><span *ngIf="data.item.solo_digital === true">- Canal Virtual</span>
+        </div>
+        <div class="col-3 text-right">
+          <button ghost nbButton size="small" (click)="ref.close ()">
+            <nb-icon icon="close-outline"></nb-icon>
+          </button>
+        </div>
+      </div>
+    </nb-card-header>
+
+    <nb-card-body>
+      <ng-container *ngIf="data.item.registro_nuevo === '1'">
+        <p class="form-header">- Actualizacion de datos</p>
+        <div class="form-box">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="exampleFormControlInput1">N° de Licencia de Funcionamiento</label>
+                <input [disabled]="true" [(ngModel)]="data.item.numero_certificado" class="form-control form-control-sm" type="text">
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Fecha de Expedicion</label>
+                <input [disabled]="true" [value]="get_date_format (data.item.fecha_exp)" class="form-control form-control-sm" type="text">
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+      </ng-container>
+      <p class="form-header">INFORMACIÓN DE LA PERSONA TITULAR</p>
+      <div class="form-box">
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Razon social</label>
+              <input [disabled]="disabled_form" [(ngModel)]="data.item.representante_razon_social" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Nombres y apellidos</label>
+              <input [disabled]="disabled_form" [(ngModel)]="data.item.representante_nombre" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">RUC</label>
+              <input [disabled]="true" [(ngModel)]="data.item.representante_ruc" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Domicilio legal</label>
+              <input [disabled]="disabled_form" [(ngModel)]="data.item.representante_direccion" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div *ngIf="data.item.representante_departamento !== undefined" class="form-group">
+              <label for="exampleFormControlInput1">Region/Provincia/Distrito</label>
+              <input [disabled]="true" [(ngModel)]="data.item.representante_departamento" class="form-control form-control-sm" type="text">
+            </div>
+            
+            <div *ngIf="data.item.representante_departamento === undefined" class="form-group">
+              <label for="exampleFormControlInput1">Region/Provincia/Distrito</label>
+              <input [disabled]="true" [value]="data.item.representante_region + '/' + data.item.representante_provincia + '/' + data.item.representante_distrito" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Doc. Identidad</label>
+              <input *ngIf="disabled_form" disabled="true" [(ngModel)]="data.item.representante_tdoc" class="form-control form-control-sm" type="text">
+              <nb-select *ngIf="disabled_form === false" [(ngModel)]="data.item.representante_tdoc" size="small" fullWidth>
+                <nb-option value="DNI">DNI</nb-option>
+                <nb-option value="CE">C.E.</nb-option>
+              </nb-select>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">N° Doc. Identidad</label>
+              <input [disabled]="disabled_form" [(ngModel)]="data.item.representante_ndoc" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <p class="form-header">INFORMACIÓN DEL ESTABLECIMIENTO</p>
+      <div class="form-box">
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Nombre Comercial</label>
+              <input [disabled]="disabled_form" [(ngModel)]="data.item.nombre_comercial" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Direccion</label>
+              <input [disabled]="disabled_form" [(ngModel)]="data.item.direccion" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Correo electronico</label>
+              <input [disabled]="true" [(ngModel)]="data.item.correo" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Region</label>
+              <input [disabled]="true" value="Cusco" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Provincia</label>
+              <input [disabled]="true" [(ngModel)]="data.item.provincia.nombre" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Distrito</label>
+              <input [disabled]="true" [(ngModel)]="data.item.distrito.nombre" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Telefono celular</label>
+              <input [disabled]="disabled_form" [(ngModel)]="data.item.telefono" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Telefono fijo</label>
+              <input [disabled]="disabled_form" [(ngModel)]="data.item.telefono_fijo" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Pagina Web</label>
+              <input [disabled]="disabled_form" [(ngModel)]="data.item.pagina_web" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Enlaces de redes sociale</label>
+              <input [disabled]="disabled_form" [(ngModel)]="data.item.cuentas_redes_sociales" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Fecha de Inicio de Operaciones</label>
+              <input [disabled]="true" [value]="get_date_format (data.item.fecha_ins)" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">N° de Licencia de Funcionamiento</label>
+              <input [disabled]="true" [(ngModel)]="data.item.numero_certificado" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Fecha de Expedicion</label>
+              <input [disabled]="true" [value]="get_date_format (data.item.fecha_exp)" class="form-control form-control-sm" type="text">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <ng-container *ngIf="data.item.solo_digital === undefined">
+        <p class="form-header">CONDICIONES MINIMAS PARA LA PRESTACION DE SERVICIOS (ANEXO I DEL REGLAMENTO)</p>
+        <div class="form-box">
+          <p class="form-sub-header">Infraestructura</p>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_ps_01">
+            <label class="form-check-label">
+              Oficina administrativa.
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_ps_02">
+            <label class="form-check-label">
+              Local de libre acceso al público para atender al turista y dedicado a prestar de manera exclusiva al servicio de agencia de viajes y turismo.
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_ps_03">
+            <label class="form-check-label">
+              Independizada de los locales de negocio colindantes.
+            </label>
+          </div>
+          <br>
+          <p class="form-sub-header">Equipamiento</p>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_ps_04">
+            <label class="form-check-label">
+              Equipo de cómputo. ({{ data.item.cantidad_equipos_computo }} unds.)
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_ps_05">
+            <label class="form-check-label">
+              Conexion a internet y correo electronico.
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_ps_06">
+            <label class="form-check-label">
+              Teléfono
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_ps_07">
+            <label class="form-check-label">
+              Equipo de impresora y escáner.
+            </label>
+          </div>
+          <br>
+          <p class="form-sub-header">Personal calificado (1)</p>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_ps_08">
+            <label class="form-check-label">
+              a) Con experiencia minima de un (1) año en actividades turisticas y que haya llevado por lo menos un curso de técnicas de atencion al caliente
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_ps_09">
+            <label class="form-check-label">
+              b) Con formación académica superiór o técnico productiva en materia de turismo.
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Total de personal calificado</label>
+            <input [disabled]="true" [(ngModel)]="data.item.total_personal_calificado" class="form-control form-control-sm" type="text">
+          </div>
+        </div>
+        <br>
+      </ng-container>
+      <ng-container *ngIf="data.item.canal_digital === '1'">
+        <p class="form-header">CONDICIONES MINIMAS PARA LA PRESTACION DEL SERVICIO A TRAVÉS DE CANALES DIGITALES (ARTICULO 22 DEL REGLAMENTO) (1)</p>
+        <div class="form-box">
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Canales en los cuales opera</label>
+            <input [disabled]="true" [(ngModel)]="data.item.canales_opera" class="form-control form-control-sm" type="text">
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_01">
+                <label class="form-check-label">
+                  Ser propietario, licenciatario o administrador de canales digitales para la oferta, promocion, comercializacion y, en general, la prestacion de sus servicios, los cuales incluyen los contenidos minimos siguientes:
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_02">
+                <label class="form-check-label">
+                  Número de teléfono, dirección y datos de contacto de la agencia de viajes y turismo y correo eletronico, las cuales pueden ser utilizados para asisitir y/o atender y/o asesorar al consumidor.
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_03">
+                <label class="form-check-label">
+                  Número de RUC.
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_04">
+                <label class="form-check-label">
+                  Razón social o nombres y apellidos, segun corresponde.
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_05">
+                <label class="form-check-label">
+                  Nombre comercial.
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_06">
+                <label class="form-check-label">
+                  Politica de Proteccion de Datos Personales.
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_07">
+                <label class="form-check-label">
+                  Términos y Condiciones de Uso del canal digital, lo que incluye, entre otros aspectos, las politicas de cobro, cancelacion y reembolso.
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_08">
+                <label class="form-check-label">
+                  Contancia de inscripcion en el Directorio Nacional de Prestadores de Servicios Turisticos Calificados, cuando esta sea expedida.
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_09">
+                <label class="form-check-label">
+                  Versión digital del afiche u otro documento similar, que contenga informacion respecto de las disposiciones legales que sancionan penalmente las conductas vinculadas a las ESNNA, de acuerdo a lascaracteristicas y contenido establecidos por el MINCETUR, asi como mlas que sancionan el hecho de tener relaciones sexuales con menores de edad, sin perjuicio de otras medidas que puedan adoptar con el mismo fin.
+                </label>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_10">
+                <label class="form-check-label">
+                  El contenido detallado en el literal a) está publicado empleando un lenguaje claro, sencillo y transparente. Ademas, esta dispuesto de manera que el acceso a los mismos desdela pagina de inicio del canal digital es asequible.
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_13">
+                <label class="form-check-label">
+                  Con experiencia minima de un (1) año en actividades turisticas y que haya llevado por lo menos un curso de técnicas de atencion al caliente.
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_14">
+                <label class="form-check-label">
+                  Con formación académica superiór o técnico productiva en materia de turismo.
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_11">
+                <label class="form-check-label">
+                  El contenido detallado en el literal a) está publicado empleando un lenguaje claro, sencillo y transparente. Ademas, esta dispuesto de manera que el acceso a los mismos desdela pagina de inicio del canal digital es asequible.
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.cond_min_cd_12">
+                <label class="form-check-label">
+                  El contenido detallado en el literal a) está publicado empleando un lenguaje claro, sencillo y transparente. Ademas, esta dispuesto de manera que el acceso a los mismos desdela pagina de inicio del canal digital es asequible.
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+      </ng-container>
+      <p class="form-header">CLASIFICACIÓN</p>
+      <input [disabled]="true" [(ngModel)]="data.item.clasificacion.nombre" class="form-control form-control-sm" type="text">
+      <br>
+      <p class="form-header">MODALIDAD DE TURISMO</p>
+      <div *ngFor="let i of data.item.modalidad_turismo" class="form-check">
+        <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="true">
+        <label class="form-check-label">
+          {{ i.nombre }}
+        </label>
+      </div>
+      <br>
+      <p class="form-header">TIPO DE TURISMO</p>
+      <div *ngFor="let i of data.item.tipos_turismo" class="form-check">
+        <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="true">
+        <label class="form-check-label">
+          {{ i.nombre }}
+        </label>
+      </div>
+      <br>
+      <p class="form-header">OTRA INFORMACIÓN</p>
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Asociación de turismo a la que pertenece</label>
+        <input [disabled]="true" [(ngModel)]="data.item.asociacion_turismo" class="form-control form-control-sm" type="text">
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Clasificacion de calidad, sostenibilidad u otro reconocimiento especial que ostenta referencia a su periodo de vigencia</label>
+        <input [disabled]="true" [(ngModel)]="data.item.clasificacion_calidad" class="form-control form-control-sm" type="text">
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.trans_terres">
+        <label class="form-check-label">
+          Transporte turístico terrestre
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.trans_acuatico">
+        <label class="form-check-label">
+          Transporte turistico actuático
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" onclick="return false;" [checked]="data.item.trans_arere">
+        <label class="form-check-label">
+          Transporte aéreo especial en actividades de turismo
+        </label>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlInput1">N° de unidades para brindar el servicio</label>
+        <input [disabled]="true" [(ngModel)]="data.item.nro_unidades_sericio" class="form-control form-control-sm" type="text">
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Señalar el número de placas</label>
+        <input [disabled]="true" [(ngModel)]="data.item.nro_placas_transporte" class="form-control form-control-sm" type="text">
+      </div>
+      <br>
+      <p class="form-header">PERSONAL DE TRABAJO</p>
+      <ol>
+        <li *ngFor="let i of data.item.personal">
+          <span *ngIf="i.genero === 'varon'">Varon</span><span *ngIf="i.genero === 'mujer'">Mujer</span><span *ngIf="i.genero === 'np'">No precisa</span> / {{ get_anios (i.anio_nacimiento) }} años
+        </li>
+      </ol>
+    </nb-card-body>
+
+    <nb-card-footer>
+      <ng-container *ngIf="disabled_form">
+        <button nbButton status="success" (click)="aprobar (ref, data.item)">Aprobar</button>
+        &nbsp;
+        &nbsp;
+        <button nbButton status="primary" (click)="rechazar_dialog (dialog_message, data.item, ref)">Rechazar</button>
+        &nbsp;
+        &nbsp;
+        <button nbButton status="primary" (click)="editar_formulario (data)">Editar</button>
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        <ng-template #templateRef>
+          <nb-list>
+            <nb-list-item style="cursor: pointer" (click)="generar_declaracion (data.item)">
+              Declaracion jurada
+            </nb-list-item>
+          </nb-list>
+        </ng-template>
+        <button nbButton [nbPopover]="templateRef">
+          <nb-icon icon="download-outline"></nb-icon>
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="disabled_form === false">
+        <button nbButton status="success" (click)="actualizar_data (data.item, ref)">Actualizar</button>
+        &nbsp;
+        &nbsp;
+        <button nbButton status="primary" (click)="cancelar_editar_formulario (data)">Cancelar</button>
+      </ng-container>
+      <!-- <div class="row">  
+        <div class="col-3">
+          <button nbButton fullWidth status="success" (click)="aprobar (ref, data.item)">Aprobar</button>
+        </div>
+
+        <div class="col-3">
+          <button nbButton fullWidth status="primary" (click)="rechazar_dialog (dialog_message, data.item, ref)">Rechazar</button>
+        </div>
+        
+        <div class="col-3">
+          <button nbButton fullWidth status="primary">Actualizar</button>
+        </div>
+        <div class="col-3 text-right">
+          
+        </div>
+      </div> -->
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<nb-alert status="warning" *ngIf="para_revisar.length > 0 && view !== 'para_revisar'">
+  <div class="row" style="align-items: center;">
+    <div class="col-10">
+      Tiene ({{ para_revisar.length }}) prestador(es) nuevo(s) para revisar.
+    </div>
+
+    <div class="col-2">
+      <button (click)="view = 'para_revisar'" nbButton fullWidth status="basic" size="small">Ver</button>
+    </div>
+  </div>
+</nb-alert>
+
+<nb-card *ngIf="view === 'provincias'" [nbSpinner]="provincias_cargando" nbSpinnerStatus="primary">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-6 align-self-center">
+        Reporte general
+      </div>
+
+      <div class="col-3 align-self-center">
+        <nb-select id="rtdocumento" [(ngModel)]="year_seleccionado" fullWidth (selectedChange)="year_changed ()">
+            <nb-option value="">Todo</nb-option>
+          <nb-option value="_2019">2019</nb-option>
+          <nb-option value="_2020">2020</nb-option>
+          <nb-option value="_2021">2021</nb-option>
+          <nb-option value="_2022">2022</nb-option>
+        </nb-select>
+      </div>
+
+      <div class="col-3 align-self-center">
+        <nb-select id="rtdocumento" [(ngModel)]="mes_seleccionado" fullWidth [disabled]="year_seleccionado === ''" (selectedChange)="month_changed ()">
+            <nb-option value="">Todo</nb-option>
+          <nb-option value="_01">Enero</nb-option>
+          <nb-option value="_02">Febrero</nb-option>
+          <nb-option value="_03">Marzo</nb-option>
+          <nb-option value="_04">Abril</nb-option>
+          <nb-option value="_05">Mayo</nb-option>
+          <nb-option value="_06">Junio</nb-option>
+          <nb-option value="_07">Julio</nb-option>
+          <nb-option value="_08">Agosto</nb-option>
+          <nb-option value="_09">Septiembre</nb-option>
+          <nb-option value="_10">Octubre</nb-option>
+          <nb-option value="_11">Noviembre</nb-option>
+          <nb-option value="_12">Diciembre</nb-option>
+        </nb-select>
+      </div>
+    </div>
+    
+  </nb-card-header>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Provincia</th>
+        <th scope="col">N° Prestadores</th>
+        <th scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of provincias">
+        <td>
+          <button class="text-transform-none" nbButton ghost status="primary" title="Listar" (click)="ver_distritos (item)">
+            {{ item.nombre }}
+          </button>
+        </td>
+        <td>{{ get_cantidad (item) }}</td>
+        <td>
+          <button class="text-transform-none" nbButton ghost status="primary" title="Listar" (click)="get_items_por_provincia (item)">
+            Ver listado >
+          </button>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          Total
+        </td>
+
+        <td>
+          <b>{{ get_total_provincias () }}</b>
+        </td>
+
+        <td>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</nb-card>
+
+<nb-card *ngIf="view === 'distritos'" [nbSpinner]="distritos_cargando" nbSpinnerStatus="primary">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-2 align-self-center">
+        <button class="text-transform-none" ghost nbButton (click)="ir_vista ('provincias')">< Regresar</button>
+      </div>
+
+      <div class="col-4 align-self-center">
+        Reporte general
+      </div>
+
+      <div class="col-3 align-self-center">
+        <nb-select id="rtdocumento" [(ngModel)]="year_seleccionado" fullWidth (selectedChange)="year_changed ()">
+            <nb-option value="">Todo</nb-option>
+          <nb-option value="_2019">2019</nb-option>
+          <nb-option value="_2020">2020</nb-option>
+          <nb-option value="_2021">2021</nb-option>
+          <nb-option value="_2022">2022</nb-option>
+        </nb-select>
+      </div>
+
+      <div class="col-3 align-self-center">
+        <nb-select id="rtdocumento" [(ngModel)]="mes_seleccionado" fullWidth [disabled]="year_seleccionado === ''">
+            <nb-option value="">Todo</nb-option>
+          <nb-option value="_01">Enero</nb-option>
+          <nb-option value="_02">Febrero</nb-option>
+          <nb-option value="_03">Marzo</nb-option>
+          <nb-option value="_04">Abril</nb-option>
+          <nb-option value="_05">Mayo</nb-option>
+          <nb-option value="_06">Junio</nb-option>
+          <nb-option value="_07">Julio</nb-option>
+          <nb-option value="_08">Agosto</nb-option>
+          <nb-option value="_09">Septiembre</nb-option>
+          <nb-option value="_10">Octubre</nb-option>
+          <nb-option value="_11">Noviembre</nb-option>
+          <nb-option value="_12">Diciembre</nb-option>
+        </nb-select>
+      </div>
+    </div>
+    
+  </nb-card-header>
+  <nb-card-body>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Distrito</th>
+          <th scope="col">N° Prestadores</th>
+          <th scope="col">Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of distritos">
+          <td>
+            {{ item.nombre }}
+          </td>
+          <td>{{ get_cantidad (item) }}</td>
+          <td>
+            <button class="text-transform-none" nbButton ghost status="primary" title="Listar" (click)="get_items_por_distrito (item)">
+              Ver listado >
+            </button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            Total
+          </td>
+  
+          <td>
+            <b>{{ get_contador_distritos () }}</b>
+          </td>
+  
+          <td>
+  
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf="view === 'lista'" [nbSpinner]="descarga_cargando" nbSpinnerStatus="primary">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-3 align-self-center">
+        <button class="text-transform-none" ghost nbButton (click)="ir_vista ('provincias')">< Regresar</button>
+      </div>
+      <div class="col-6 align-self-center text-center">
+        <b>Agencias: {{ provincia_seleccionada.nombre }}</b>
+      </div>
+
+      <div class="col-3 align-self-center text-center">
+        Total: {{ contador }}
+      </div>
+    </div>
+  </nb-card-header>
+  
+  <nb-card-header>
+    <div class="row">
+      <div class="col-3 align-self-center">
+        <nb-select [(ngModel)]="clasificacion_seleccionado" fullWidth (selectedChange)="filtrar ()">
+          <nb-option value="">Todo</nb-option>
+          <nb-option *ngFor="let item of tipo_clasificaciones" [value]="item.id">
+            {{ item.nombre }}
+          </nb-option>
+        </nb-select>
+      </div>
+
+      <div class="col-3 align-self-center">
+        <nb-select [(ngModel)]="modalidad_seleccionado" fullWidth (selectedChange)="filtrar ()">
+          <nb-option value="">Todo</nb-option>
+          <nb-option *ngFor="let item of modalidad_turismo" [value]="item.id">
+            {{ item.nombre }}
+          </nb-option>
+        </nb-select>
+      </div>
+
+      <div class="col-3 align-self-center">
+        <nb-select [(ngModel)]="tipo_seleccionado" fullWidth (selectedChange)="filtrar ()">
+          <nb-option value="">Todo</nb-option>
+          <nb-option *ngFor="let item of tipos_turismo" [value]="item.id">
+            {{ item.nombre }}
+          </nb-option>
+        </nb-select>
+      </div>
+
+      <div class="col-3 align-self-center">
+        <button fullWidth nbButton size="small" (click)="exportAsXLSX ()">Exportar<nb-icon icon="save-outline"></nb-icon></button>
+      </div>
+    </div>
+  </nb-card-header>
+
+  <nb-card-header>
+    <input [(ngModel)]="search_text" (ngModelChange)="filter ()" nbInput fullWidth placeholder="Buscar" type="search">
+  </nb-card-header>
+    
+  <table class="table table-bordered table-striped" [nbSpinner]="lista_cargando" nbSpinnerStatus="primary">
+    <thead>
+      <tr>
+        <th scope="col">N°</th>
+        <th scope="col">Nombre comercial</th>
+        <th scope="col">Fecha aprobado</th>
+        <th scope="col">Telefono</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Representante legal</th>
+        <th style="min-width: 128px;" scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items; index as i">
+        <td>{{ i+1 }}</td>
+        <td>{{ item.nombre_comercial }}</td>
+        <td>{{ get_date (item.fecha_aprobado) }}</td>
+        <td>{{ item.telefono }}</td>
+        <td>
+          <span *ngIf="item.solo_digital === true">
+            Virtual
+          </span>
+          <span *ngIf="item.solo_digital === undefined">
+            <span *ngIf="item.canal_digital === '0'">
+              Fisica
+            </span>
+            <span *ngIf="item.canal_digital === '1'">
+              Fisica / Virtual
+            </span>
+          </span>
+        </td>
+        <td style="font-size: 11px">
+          <ng-container *ngIf="item.representante_nombre !== ''">
+            <b>Nombre: </b>{{ item.representante_nombre }}
+          </ng-container>
+
+          <ng-container *ngIf="item.representante_razon_social !== ''">
+            <b>Razon Social: </b>{{ item.representante_razon_social }}
+          </ng-container>
+
+          <br>
+          <b>RUC: </b>{{ item.representante_ruc }}
+        </td>
+        <td>
+          <button class="text-transform-none" nbButton ghost status="primary" (click)="ver_detalle (item)">Detalles ></button>
+          &nbsp;
+          <button class="text-transform-none" nbButton ghost status="primary" (click)="certificado (item)">Constancia ></button>
+          &nbsp;
+          <button class="text-transform-none" nbButton ghost status="primary" (click)="generar_declaracion (item)">Declaracion Jurada ></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</nb-card>
+
+<nb-card *ngIf="view === 'para_revisar'">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-3 align-self-center">
+        <button class="text-transform-none" ghost nbButton (click)="ir_vista ('provincias')">< Regresar</button>
+      </div>
+      <div class="col-6 align-self-center text-center">
+
+      </div>
+
+      <div class="col-3 align-self-center text-center">
+        <nb-select [(ngModel)]="tipo_para_revisar" fullWidth>
+          <nb-option value="todo">Todo</nb-option>
+          <nb-option value="duplicados">Duplicados</nb-option>
+        </nb-select>
+      </div>
+    </div>
+  </nb-card-header>
+
+  <table *ngIf="tipo_para_revisar === 'todo'" class="table table-bordered table-striped" [nbSpinner]="lista_cargando" nbSpinnerStatus="primary">
+    <thead>
+      <tr>
+        <th scope="col">N°</th>
+        <th scope="col">Nombre comercial</th>
+        <th scope="col">Fecha solicitud</th>
+        <th scope="col">Telefono</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Representante legal</th>
+        <th style="min-width: 128px;" scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of para_revisar; index as i">
+        <td>{{ i+1 }}</td>
+        <td>{{ item.nombre_comercial }}</td>
+        <td>{{ get_date_format (item.fecha_solicitud) }}</td>
+        <td>{{ item.telefono }}</td>
+        <td>
+          <span *ngIf="item.solo_digital === true">
+            Virtual
+          </span>
+          <span *ngIf="item.solo_digital === undefined">
+            <span *ngIf="item.canal_digital === '0'">
+              Fisica
+            </span>
+            <span *ngIf="item.canal_digital === '1'">
+              Fisica / Virtual
+            </span>
+          </span>
+        </td>
+        <td style="font-size: 11px">
+          <ng-container *ngIf="item.representante_nombre !== ''">
+            <b>Nombre: </b>{{ item.representante_nombre }}
+          </ng-container>
+
+          <ng-container *ngIf="item.representante_razon_social !== ''">
+            <b>Razon Social: </b>{{ item.representante_razon_social }}
+          </ng-container>
+
+          <br>
+          <b>RUC: </b>{{ item.representante_ruc }}
+        </td>
+        <td>
+          <button nbButton size="tiny" (click)="aprobar_dialog (item, dialog)">
+            <nb-icon icon="eye-outline"></nb-icon>
+          </button>
+          &nbsp;
+          <button nbButton size="tiny" status="danger" (click)="eliminar (item, true)">
+            <nb-icon icon="trash-2-outline"></nb-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table *ngIf="tipo_para_revisar === 'duplicados'" class="table table-bordered" [nbSpinner]="lista_cargando" nbSpinnerStatus="primary">
+    <thead>
+      <tr>
+        <th scope="col">N° de RUC</th>
+        <th scope="col">Nombre comercial</th>
+        <th scope="col">Fecha solicitud</th>
+        <th scope="col">Telefono</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Representante legal</th>
+        <th style="min-width: 128px;" scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let v of duplicados | keyvalue">
+        <tr *ngFor="let item of v.value">
+          <td>{{ item.representante_ruc }}</td>
+          <td>{{ item.nombre_comercial }}</td>
+          <td>{{ get_date_format (item.fecha_solicitud) }}</td>
+          <td>{{ item.telefono }}</td>
+          <td>
+            <span *ngIf="item.solo_digital === true">
+              Virtual
+            </span>
+            <span *ngIf="item.solo_digital === undefined">
+              <span *ngIf="item.canal_digital === '0'">
+                Fisica
+              </span>
+              <span *ngIf="item.canal_digital === '1'">
+                Fisica / Virtual
+              </span>
+            </span>
+          </td>
+          <td style="font-size: 11px">
+            <ng-container *ngIf="item.representante_nombre !== ''">
+              <b>Nombre: </b>{{ item.representante_nombre }}
+            </ng-container>
+  
+            <ng-container *ngIf="item.representante_razon_social !== ''">
+              <b>Razon Social: </b>{{ item.representante_razon_social }}
+            </ng-container>
+  
+            <br>
+            <b>RUC: </b>{{ item.representante_ruc }}
+          </td>
+          <td>
+            <button nbButton size="tiny" (click)="aprobar_dialog (item, dialog)">
+              <nb-icon icon="eye-outline"></nb-icon>
+            </button>
+            &nbsp;
+            <button nbButton size="tiny" status="danger" (click)="eliminar (item, false)">
+              <nb-icon icon="trash-2-outline"></nb-icon>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</nb-card>

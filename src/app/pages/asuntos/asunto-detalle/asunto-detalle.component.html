@@ -1,0 +1,30 @@
+<form [formGroup]="form">
+  <div class="row">
+    <div class="col">
+      <div class="row">
+        <div class="col-3">
+          <button ghost nbButton (click)="regresarListado ()">< Regresar</button>
+        </div>
+      </div>
+      <nb-card>
+        <nb-card-header>
+            <h4 style="font-size: 18px;">Actualizar Asunto</h4>
+          </nb-card-header>
+        <nb-card-body>
+          <div class="form-group">
+            <label for="nombre" class="label">Nombre:</label>
+            <input type="text" formControlName="nombre" id="nombre" nbInput fullWidth>
+          </div>
+        </nb-card-body>
+      </nb-card>
+      <div class="row">
+        <div class="col-6">
+          <button nbButton fullWidth status="danger" (click)="elimninar ()">Eliminar</button>
+        </div>
+        <div class="col-6">
+          <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submit ()">Actualizar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

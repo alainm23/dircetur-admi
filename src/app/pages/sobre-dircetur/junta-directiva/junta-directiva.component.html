@@ -1,0 +1,137 @@
+<div class="row">
+    <div class="col">
+      <nb-card>
+        <nb-card-header>
+          <div class="row">
+            <div class="col-9">
+              Junta Directiva
+            </div>
+  
+            <div class="col-3">
+              <button nbButton fullWidth size="tiny" (click)="agregar ()">Agregar</button>
+            </div>
+          </div>
+        </nb-card-header>
+      </nb-card>
+  
+      <nb-card *ngIf="show_nuevo === true" [nbSpinner]="is_nuevo_loading" nbSpinnerStatus="primary">
+        <nb-card-body>
+          <div class="row">
+            <div class="col-3">
+              <div [className]="avatar_preview === null ? 'avatar-preview avatar-default' : 'avatar-preview'">
+                <img class="avatar-image" [src]="avatar_preview">
+              </div>
+              <div class="" (click)="fileInput.click()">
+                <button style="margin-top: 1rem;" fullWidth size="tiny" nbButton>Seleccionar</button>
+                <input hidden type="file" accept="image/*" #fileInput (change)="changeListener($event)">
+              </div>
+            </div>
+  
+            <div class="col-9">
+              <form [formGroup]="form">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="nombre" class="label">Nombre completo:</label>
+                      <input formControlName="nombre" type="text" id="nombre" nbInput fullWidth>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="cargo" class="label">Cargo:</label>
+                      <input formControlName="cargo" type="text" id="cargo" nbInput fullWidth>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="nombre" class="label">Correo electronico:</label>
+                      <input formControlName="correo" type="text" id="nombre" nbInput fullWidth>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="cargo" class="label">Telefono:</label>
+                      <input formControlName="telefono" type="text" id="cargo" nbInput fullWidth>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <div class="row">
+                <div class="col-6 align-self-center">
+                  <nb-progress-bar [value]="uploadPercent" *ngIf="is_nuevo_loading"></nb-progress-bar>
+                </div>
+      
+                <div class="col-3 align-self-center">
+                  <button nbButton fullWidth size="small" status="danger" (click)="cancelar_nuevo ()">Cancelar</button>
+                </div>
+      
+                <div class="col-3 align-self-center">
+                  <button nbButton fullWidth size="small"  [disabled]="!form.valid" (click)="submit ()">Agregar</button>
+                </div>
+              </div> 
+            </div>
+          </div>
+        </nb-card-body>
+      </nb-card>
+      
+      <nb-card *ngFor="let item of items">
+        <nb-card-body>
+          <div class="row">
+            <div class="col-3">
+              <img class="avatar-image" [src]="item.avatar">
+            </div>
+
+            <div class="col-9">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="nombre" class="label">Nombre completo:</label>
+                    <input [(ngModel)]="item.nombre" type="text" id="nombre" nbInput fullWidth>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="cargo" class="label">Cargo:</label>
+                    <input [(ngModel)]="item.cargo" type="text" id="cargo" nbInput fullWidth>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="nombre" class="label">Correo electronico:</label>
+                    <input [(ngModel)]="item.correo" type="text" id="nombre" nbInput fullWidth>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="cargo" class="label">Telefono:</label>
+                    <input [(ngModel)]="item.telefono" type="text" id="cargo" nbInput fullWidth>
+                  </div>
+                </div>
+              </div>
+                    
+              <div class="row">
+                <div class="col-6">
+                  
+                </div>
+      
+                <div class="col-3">
+                  <button nbButton fullWidth size="small" status="danger" (click)="eliminar (item)">Eliminar</button>
+                </div>
+      
+                <div class="col-3">
+                  <button nbButton fullWidth size="small" [disabled]="item.nombre === '' || item.cargo === ''" (click)="actualizar (item)">Actualizar</button>
+                </div>
+              </div> 
+            </div>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>

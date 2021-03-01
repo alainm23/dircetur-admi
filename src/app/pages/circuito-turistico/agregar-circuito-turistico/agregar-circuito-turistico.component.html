@@ -1,0 +1,160 @@
+<div class="row" [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+  <div class="col">
+    <form [formGroup]="form">
+      <nb-card>
+        <nb-card-header>Informacion</nb-card-header>
+        <nb-card-body>
+          <div class="form-group">
+            <label for="nombre" class="label">Nombre:</label>
+            <input type="text" formControlName="nombre_es" id="nombre" nbInput fullWidth>
+          </div>
+
+          <div class="form-group">
+            <label for="descripcion" class="label">Descripcion:</label>
+            <textarea formControlName="descripcion_es" rows="5" nbInput fullWidth shape="rectangle" id="descripcion"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="donde" class="label">Donde:</label>
+            <input type="text" formControlName="donde_es" id="donde" nbInput fullWidth>
+          </div>
+
+          <div class="form-group">
+            <label for="altitud" class="label">Altitud:</label>
+            <input type="text" formControlName="altitud_es" id="altitud" nbInput fullWidth>
+          </div>
+
+          <div class="form-group">
+            <label for="incluye" class="label">Incluye:</label>
+            <textarea formControlName="incluye_es" rows="5" nbInput fullWidth shape="rectangle" id="incluye"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="no_incluye" class="label">No Incluye:</label>
+            <textarea formControlName="no_incluye_es" rows="5" nbInput fullWidth shape="rectangle" id="no_incluye"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="tags" class="label">Etiquetas:</label>
+            <input type="text" id="tags" nbInput fullWidth placeholder="Registra una etiqueta..." (keyup.enter)="agregar_tag ($event)">
+          </div>
+
+          <div class="form-group" style="display: flex;">
+            <div *ngFor="let item of tags" style="display: flex;">
+              <span style="margin: 0px 6px 0px 0px;" class="badge badge-light">
+                {{ item.nombre }}
+              </span>
+
+              <span style="margin: 0px 6px 0px 0px; border-radius: 50%;" class="badge badge-danger" (click)="eliminar_tag (item)">
+                x
+              </span>
+            </div>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </form>
+
+    <nb-card>
+      <nb-card-header>
+        <div class="row">
+          <div class="col-9">
+            Imagenes (Recomendados: 900px x 375px)
+          </div>
+  
+          <div class="col-3">
+            <div>
+              <button fullWidth nbButton size="tiny" (click)="fileInput.click ()">Subir imagen</button>
+              <input hidden multiple type="file" accept="image/*" #fileInput (change)="changeListener($event)">
+            </div>
+          </div>
+        </div>
+      </nb-card-header>
+      <nb-card-body>
+        <nb-list>
+          <nb-list-item *ngFor="let item of files">
+            <div class="row">
+              <div class="col-3 align-self-center">
+                <img class="img-preview" [src]="item.image">
+              </div>
+              
+              <div class="col-6">
+                <div class="form-group" *ngIf="item.uploadPercent !== 0">
+                  <label for="progress" class="label">Subiendo al servividor...</label>
+                  <nb-progress-bar [value]="item.uploadPercent" id="progress"></nb-progress-bar>
+                </div>
+              </div>
+              
+              <div class="col-3 align-self-center">
+                <button nbButton size="tiny" fullWidth status="danger" (click)="eliminarImagen (item)">Eliminar</button>
+              </div>
+            </div>
+          </nb-list-item>
+        </nb-list>
+      </nb-card-body>
+    </nb-card>
+    
+    <nb-card>
+      <nb-card-header>
+        <div class="row">
+          <div class="col-9">
+            Dias
+          </div>
+
+          <div class="col-3">
+            <button nbButton fullWidth size="tiny" (click)="agregarDia ()">Agregar Dia</button>
+          </div>
+        </div>
+      </nb-card-header>
+    </nb-card>
+
+    <nb-card *ngFor="let d of dias">
+      <nb-card-header>
+        <div class="row">
+          <div class="col-4">
+            <input [(ngModel)]="d.nombre_es" type="text" id="d-nombre" nbInput fullWidth>
+          </div>
+
+          <div class="col-3">
+            <button nbButton size="tiny" fullWidth status="danger" (click)="eliminarDia (d)">
+              Eliminar Dia
+            </button>
+          </div>
+
+          <div class="col-5">
+            <button nbButton size="tiny" fullWidth status="primary" (click)="agregarActividad (d)">
+              Agregar Actividad
+            </button>
+          </div>
+        </div>
+      </nb-card-header>
+
+      <nb-card-body class="card-no-padding">
+        <nb-list>
+          <nb-list-item *ngFor="let i of d.actividades">
+            <div class="form-group">
+              <label for="nombre" class="label">Nombre:</label>
+              <input [(ngModel)]="i.nombre_es" type="text" id="i-nombre" nbInput fullWidth>
+            </div>
+    
+            <div class="form-group">
+              <label for="descripcion" class="label">Detalle:</label>
+              <textarea [(ngModel)]="i.detalle_es" rows="5" nbInput fullWidth shape="rectangle" id="descripcion"></textarea>
+            </div>
+    
+            <button nbButton size="tiny" status="danger" (click)="eliminarActividad (i, d.actividades)">Borrar</button>
+          </nb-list-item>
+        </nb-list>
+      </nb-card-body>
+    </nb-card>
+
+    <div class="row">
+      <div class="col-6">
+        <button nbButton fullWidth status="danger">Cancelar</button>
+      </div>
+
+      <div class="col-6">
+        <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submit ()">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>

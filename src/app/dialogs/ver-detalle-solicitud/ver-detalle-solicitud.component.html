@@ -1,0 +1,67 @@
+<div class="row">
+  <div class="pt-4" style="width: 700px;">
+    <nb-card [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+      <nb-card-header class="header-class">
+        <div class="row">
+          <div class="col-11 align-self-center" style="color: white;">
+              Detalle de la Solicitud
+          </div>
+          <div class="col-1 align-self-center">
+            <nb-icon class="close-button" icon="close" (click)="close ()" style="color: white; cursor: pointer;"></nb-icon>
+          </div>
+        </div>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="row">
+          <div class="col-6">
+            <label for="asunto" class="label"><strong>Asunto: </strong>{{detalle?.asunto.nombre}}</label>
+            <br>
+            <div *ngIf="estado_capacitacion">
+              <label for="capacitacion" class="label"><strong>Tipo de Capacitación: </strong>{{detalle?.capacitacion.nombre}}</label>
+              <br>
+            </div>
+            <label class="label"><strong>Descripción de la Solicitud: </strong>{{informacion_detalle?.descripcion}}</label>
+            <br>
+            <div *ngIf="informacion_detalle?.data!=null || informacion_detalle?.data!=undefined">
+              <label class="label"><strong>Observación Entregado: </strong>{{informacion_detalle?.data.observacion}}</label>
+              <br>
+            </div>
+            <div *ngIf="informacion_detalle?.observacion_rechazo!=null || informacion_detalle?.observacion_rechazo!=undefined">
+              <label class="label"><strong>Observación del Rechazo: </strong>{{informacion_detalle?.observacion_rechazo}}</label>
+              <br>
+            </div>
+            <label class="label"><strong>Estado: </strong>{{estado_solicitud}}</label>
+            <br>
+            <div *ngIf="detalle?.monto!=null || detalle?.monto!=undefined">
+              <label class="label"><strong>Monto: </strong>(S/.) {{detalle?.monto}}</label>
+              <br>
+            </div>
+            <label class="label"><strong>Registrado: </strong>{{formatFecha(detalle?.fecha_solicitud)}}</label>
+            <br>
+            <div *ngIf="detalle?.fecha_aprobacion!=null || detalle?.fecha_aprobacion!=undefined">
+              <label class="label"><strong>Aprobado: </strong>{{formatFecha(detalle?.fecha_aprobacion)}}</label>
+              <br>
+            </div>
+            <div *ngIf="detalle?.fecha_entregado!=null || detalle?.fecha_entregado!=undefined">
+              <label class="label"><strong>Entregado: </strong>{{formatFecha(detalle?.fecha_entregado)}}</label>
+              <br>
+            </div>
+            <div *ngIf="detalle?.fecha_rechazado!=null || detalle?.fecha_rechazado!=undefined">
+              <label class="label"><strong>Rechazado: </strong>{{formatFecha(detalle?.fecha_rechazado)}}</label>      
+            </div>
+          </div>
+          <div class="col-6" *ngIf="estado_juridico">
+            <h4>Datos de Contacto</h4>
+            <label class="label"><strong>Nombre Completo: </strong>{{informacion_detalle?.nombre_completo_contacto}}</label>
+            <br>
+            <label class="label"><strong>Dni: </strong>{{informacion_detalle?.dni_contacto}}</label>
+            <br>
+            <label class="label"><strong>Correo: </strong>{{informacion_detalle?.correo_contacto}}</label>
+            <br>
+            <label class="label"><strong>Teléfono: </strong>{{informacion_detalle?.telefono_contacto}}</label>
+          </div>
+        </div>
+        </nb-card-body>
+    </nb-card>
+  </div>
+</div>

@@ -1,0 +1,390 @@
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card [nbSpinner]="dialog_loading" nbSpinnerStatus="primary">
+    <nb-card-header>Registrar: {{ data }}</nb-card-header>
+    <nb-card-body>
+      <form [formGroup]="form_nuevo">
+        <div class="form-group">
+          <label for="asunto" class="label">Asunto:</label>
+          <nb-select *ngIf="data === 'Reconocimiento'" id="asunto" fullWidth placeholder="Select Showcase" formControlName="asunto">
+            <nb-option *ngFor="let item of reconocimientos" [value]="item">
+              {{ item.nombre }}
+            </nb-option>
+          </nb-select>
+
+          <nb-select *ngIf="data !== 'Reconocimiento'" id="asunto" fullWidth placeholder="Select Showcase" formControlName="asunto">
+              <nb-option *ngFor="let item of sanciones" [value]="item">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+        </div>
+
+        <div class="form-group">
+          <label for="descripcion" class="label">Descripcion:</label>
+          <textarea formControlName="descripcion" rows="5" nbInput fullWidth shape="rectangle" id="descripcion"></textarea>
+        </div>
+      </form>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="ref.close ()">Cancelar</button>
+      &nbsp;&nbsp;
+      <button nbButton status="danger" (click)="registrar (data, ref)" [disabled]="!form_nuevo.valid">Aceptar</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<ng-template #dialog_subsanar let-data let-ref="dialogRef">
+  <nb-card [nbSpinner]="dialog_loading" nbSpinnerStatus="primary">
+    <nb-card-header>Subsanar: {{ data.asunto.nombre }}</nb-card-header>
+    <nb-card-body>
+      <form [formGroup]="form_sub">
+        <div class="form-group">
+          <label for="descripcion" class="label">Descripcion:</label>
+          <textarea formControlName="descripcion" rows="5" nbInput fullWidth shape="rectangle" id="descripcion"></textarea>
+        </div>
+      </form>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="ref.close()">Cancelar</button>
+      &nbsp;&nbsp;
+      <button nbButton status="danger" (click)="subsanar (ref, data)" [disabled]="!form_sub.valid">Aceptar</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<div class="row" [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+    <div class="col-lg-6 offset-lg-3">
+      <form [formGroup]="form">
+        <nb-card>
+          <nb-card-header>Detalles</nb-card-header>
+          <nb-card-body>
+            <div class="form-group">
+              <label for="nombre_comercial" class="label">Nombre comercial:</label>
+              <input type="text" formControlName="nombre_comercial" id="nombre_comercial" nbInput fullWidth placeholder="Nombre comercial">
+            </div>
+            
+            <div class="form-group">
+              <label for="ruc" class="label">RUC:</label>
+              <input type="text" formControlName="representante_ruc" nbInput fullWidth id="ruc" placeholder="RUC">
+            </div>
+  
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="direccion" class="label">Dirección:</label>
+                  <input type="text" formControlName="direccion" nbInput fullWidth id="direccion" placeholder="Dirección">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="telefono" class="label">Teléfono:</label>
+                  <input type="text" formControlName="telefono" nbInput fullWidth id="telefono" placeholder="Teléfono">
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="paginaweb" class="label">Correo:</label>
+              <input type="text" formControlName="correo" id="paginaweb" nbInput fullWidth placeholder="Número certificado">
+            </div>
+
+            <div class="form-group">
+              <label for="paginaweb" class="label">Enlace de redes sociales:</label>
+              <input type="text" formControlName="cuentas_redes_sociales" id="paginaweb" nbInput fullWidth placeholder="Número certificado">
+            </div>
+
+            <div class="form-group">
+              <label for="paginaweb" class="label">Página web:</label>
+              <input type="text" formControlName="pagina_web" id="paginaweb" nbInput fullWidth placeholder="Número certificado">
+            </div>
+  
+            <div class="form-group">
+              <label for="numerocertificado" class="label">Número certificado:</label>
+              <input type="text" formControlName="nro_certificado" id="numerocertificado" nbInput fullWidth placeholder="Número certificado">
+            </div>
+  
+            <!-- <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="fechainspeccion" class="label">Fecha última inspección:</label>
+                  <input nbInput 
+                    formControlName="fecha_ins"
+                    fullWidth
+                    placeholder="Fecha última inspección"
+                    id="fechainspeccion"
+                    [nbDatepicker]="fechainspeccion">
+                  <nb-datepicker #fechainspeccion></nb-datepicker>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="fechaexpedicion" class="label">Fecha expedición:</label>
+                  <input nbInput fullWidth
+                    formControlName="fecha_aprobacion"
+                    placeholder="Fecha última inspección"
+                    id="fechaexpedicion"
+                    [nbDatepicker]="fechaexpedicion">
+                  <nb-datepicker #fechaexpedicion></nb-datepicker>
+                </div>
+              </div>
+  
+            </div> -->
+  
+            <div class="form-group">
+              <label for="clasificacion" class="label">Clasificación:</label>
+              <select class="select-css" fullWidth formControlName="clasificacion" id="clasificacion" [compareWith]="compareWith">
+                <option *ngFor="let item of tipo_clasificaciones" [ngValue]="item">
+                  {{ item.nombre }}
+                </option>
+              </select>
+            </div>
+  
+            <div class="form-group">
+              <label for="tipo" class="label">Tipo de turismo:</label>
+              <div class="demo-items" id="tipo">
+                <div *ngFor="let item of tipos_turismo">
+                  <nb-checkbox [checked]="item.checked" (checkedChange)="checkedChanged (item)">
+                    {{ item.nombre }}
+                  </nb-checkbox>
+                </div>
+              </div>
+            </div>
+  
+            <div class="form-group">
+              <label for="provincia" class="label">Provincia:</label>
+              <select class="select-css"
+                formControlName="provincia" 
+                (ngModelChange)="provinciaChanged ($event)"
+                fullWidth 
+                id="provincia"
+                [compareWith]="compareWith">
+                <option *ngFor="let item of provincias" [ngValue]="item">
+                  {{ item.nombre }}
+                </option>
+              </select>
+            </div>
+  
+            <div class="form-group">
+              <label for="distrito" class="label">Distrito:</label>
+              <select class="select-css" fullWidth formControlName="distrito" id="distritos" [compareWith]="compareWith">
+                <option *ngFor="let item of distritos" [ngValue]="item">
+                  {{ item.nombre }}
+                </option>
+              </select>
+            </div>
+            
+            <!-- <div class="form-group">
+              <label for="complementarios" class="label">Servicios complementarios:</label>
+              <textarea formControlName="servicios_complementarios" rows="5" nbInput fullWidth shape="rectangle" id="complementarios" placeholder="Servicios complementarios"></textarea>
+            </div>
+  
+            <div class="form-group">
+              <label for="observaciones" class="label">Observaciones:</label>
+              <textarea formControlName="observaciones" rows="5" nbInput fullWidth shape="rectangle" id="observaciones" placeholder="Observaciones"></textarea>
+            </div> -->
+          </nb-card-body>
+        </nb-card>
+
+        <nb-card>
+          <nb-card-header>Representante legal</nb-card-header>
+          <nb-card-body>
+            <div class="form-group">
+              <label for="representante_nombre" class="label">Nombre completo</label>
+              <input type="text" id="representante_nombre" nbInput fullWidth placeholder="" formControlName="representante_nombre">
+            </div>
+
+            <div class="form-group">
+              <label for="representante_razon_social" class="label">Razón Social</label>
+              <input type="text" id="representante_razon_social" nbInput fullWidth placeholder="" formControlName="representante_razon_social">
+            </div>
+
+            <ng-container *ngIf="representante_departamento === false">
+              <div class="form-group">
+                <label for="representante_razon_social" class="label">Provincia:</label>
+                <input type="text" id="representante_departamento" nbInput fullWidth placeholder="" formControlName="representante_provincia">
+              </div>
+
+              <div class="form-group">
+                <label for="representante_razon_social" class="label">Distrito:</label>
+                <input type="text" id="representante_departamento" nbInput fullWidth placeholder="" formControlName="representante_distrito">
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="representante_departamento === true">
+              <div class="form-group">
+                <label for="representante_razon_social" class="label">Región/Provincia/Distrito:</label>
+                <input type="text" id="representante_departamento" nbInput fullWidth placeholder="" formControlName="representante_departamento">
+              </div>
+            </ng-container>
+    
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="representante_tdoc" class="label">Tipo de documento:</label>
+    
+                  <nb-select id="representante_tdoc" formControlName="representante_tdoc" fullWidth>
+                    <nb-option value="DNI">DNI</nb-option>
+                    <nb-option value="CE">C.E.</nb-option>
+                  </nb-select>
+                </div>
+              </div>
+              
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="representante_ndoc" class="label">Numero de documento</label>
+                  <input type="text" id="representante_ndoc" nbInput fullWidth formControlName="representante_ndoc">
+                </div>
+              </div>
+            </div>
+    
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="representante_direccion" class="label">Dirección:</label>
+                  <input type="text" id="representante_direccion" nbInput fullWidth placeholder="" formControlName="representante_direccion">
+                </div>
+              </div>
+    
+              <!-- <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="representante_telefono" class="label">Telefono celular:</label>
+                  <input type="text" id="representante_telefono" nbInput fullWidth placeholder="" formControlName="representante_telefono">
+                </div>
+              </div> -->
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </form>
+    </div>
+
+    <div class="col-lg-6 offset-lg-3">
+      <div class="row">
+        <div class="col-12">
+          <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submit ()">Actualizar</button>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-lg-6">
+      <nb-card>
+        <nb-card-header>
+          <div class="row">
+            <div class="col-9">
+              Socios
+            </div>
+    
+            <div class="col-3">
+              <button nbButton size="tiny" (click)="agregarRepresentante ()">Agregar</button>
+            </div>
+          </div>
+        </nb-card-header>
+      </nb-card>
+
+      <nb-card *ngFor="let r of representates">
+        <nb-card-body>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="rnombrecompleto" class="label">Nombre completo</label>
+                <input type="text" id="rnombrecompleto" nbInput fullWidth placeholder="" [(ngModel)]="r.nombre">
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="remail" class="label">Correo electronico:</label>
+                <input type="text" id="remail" nbInput fullWidth placeholder="" [(ngModel)]="r.correo">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="rtdocumento" class="label">Tipo de documento:</label>
+
+                <nb-select id="rtdocumento" [(ngModel)]="r.tdoc" fullWidth>
+                  <nb-option value="DNI">DNI</nb-option>
+                  <nb-option value="CE">C.E.</nb-option>
+                </nb-select>
+              </div>
+            </div>
+
+            
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="rndocumento" class="label">Numero de documento</label>
+                <input type="text" id="rndocumento" nbInput fullWidth placeholder="" [(ngModel)]="r.ndoc">
+              </div>
+            </div>
+          </div>
+
+          <div class="row"> 
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="rdireccion" class="label">Dirección:</label>
+                <input type="text" id="rdireccion" nbInput fullWidth placeholder="" [(ngModel)]="r.direccion">
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="rtcelular" class="label">Telefono celular:</label>
+                <input type="text" id="rtcelular" nbInput fullWidth placeholder="" [(ngModel)]="r.telefono">
+              </div>
+            </div>
+          </div>
+
+          <button nbButton size="small" status="danger"  (click)="eliminarRepresentante (r)">Eliminar</button>
+        </nb-card-body>
+      </nb-card>
+
+      <nb-accordion>
+        <nb-accordion-item>
+          <nb-accordion-item-header>
+            <div class="row">
+              <div class="col">
+                Reconocimientos
+              </div>
+
+              <div class="col">
+                <button nbButton size="tiny" (click)="abrir_dialogo (dialog, 'Reconocimiento')">
+                  Registrar
+                </button>
+              </div>
+            </div>
+          </nb-accordion-item-header>
+          <nb-accordion-item-body *ngFor="let item of data_reconocimientos">
+            <b>{{ item.asunto.nombre }}</b>: {{ item.descripcion }}
+          </nb-accordion-item-body>
+        </nb-accordion-item>
+      </nb-accordion>
+      <br>
+      <nb-accordion>
+        <nb-accordion-item>
+          <nb-accordion-item-header>
+            <div class="row">
+              <div class="col">
+                Sanciones
+              </div>
+
+              <div class="col">
+                <button nbButton size="tiny" (click)="abrir_dialogo (dialog, 'Sancion')">
+                  Registrar
+                </button>
+              </div>
+            </div>
+          </nb-accordion-item-header>
+          <nb-accordion-item-body *ngFor="let item of data_sanciones">
+            <b>{{ item.asunto.nombre }}</b>: {{ item.descripcion }}
+            <span *ngIf="item.estado === 'Pendiente'" class="badge badge-danger" (click)="subsanadar_dialog (item, dialog_subsanar)">
+              Pendiente
+            </span>
+            
+            <span *ngIf="item.estado !== 'Pendiente'" class="badge badge-success">
+              Subsanada
+            </span>
+          </nb-accordion-item-body>
+        </nb-accordion-item>
+      </nb-accordion>
+    </div> -->
+</div>  

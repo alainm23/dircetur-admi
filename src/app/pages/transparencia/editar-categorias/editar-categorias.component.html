@@ -1,0 +1,141 @@
+<div class="row" [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+  <div class="col">
+    <nb-card *ngIf="view === 'categorias'">
+      <nb-card-header>
+          <div class="row">
+          <div class="col-10">
+              {{ items.length }} categoria (s)
+          </div>
+
+          <div class="col-2">
+              <button nbButton fullWidth size="tiny" (click)="agregar_nuevo ()">Agregar</button>
+          </div>
+          </div>
+      </nb-card-header>
+
+      <nb-list>
+        <nb-list-item *ngIf="show_nuevo" [nbSpinner]="is_nuevo_loading" nbSpinnerStatus="primary">
+        <div class="row">
+            <div class="col-8 align-self-center">
+            <input type="text" fieldSize="small" nbInput fullWidth placeholder="Nombre" [(ngModel)]="nuevo">
+            </div>
+
+            <div class="col-2 align-self-center">
+            <button nbButton size="tiny" fullWidth status="danger" (click)="cancel_nuevo ()">Cancelar</button>
+            </div>
+
+            <div class="col-2  align-self-center">
+            <button nbButton size="tiny" fullWidth status="success" (click)="guardar_nuevo ()">Crear</button>
+            </div> 
+        </div>
+        </nb-list-item>
+
+        <nb-list-item *ngFor="let item of items">
+        <div class="row" *ngIf="item.edit === false">
+            <div class="col-6 align-self-center">
+              {{ item.nombre }}
+            </div>
+          
+            <div class="col-2 align-self-center">
+              <button nbButton fullWidth size="tiny" ghost (click)="ver_subcategorias (item)">
+                  <nb-icon icon="edit-outline"></nb-icon>Subcategorias
+              </button>
+            </div>
+
+            <div class="col-2 align-self-center">
+              <button nbButton fullWidth size="tiny" ghost (click)="editar (item)">
+                  <nb-icon icon="edit-outline"></nb-icon>Editar
+              </button>
+            </div>
+
+            <div class="col-2 align-self-center">
+              <button nbButton fullWidth status="danger" size="tiny" ghost (click)="eliminar (item)"><nb-icon icon="trash-outline"></nb-icon>Eliminar</button>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="item.edit === true">
+            <div class="col-8 align-self-center">
+            <input type="text" [id]="item.id" [value]="item.nombre" fieldSize="small" nbInput fullWidth placeholder="Nombre">
+            </div>
+
+            <div class="col-2 align-self-center">
+            <button nbButton size="tiny" fullWidth status="danger" (click)="cancel (item)">Cancelar</button>
+            </div>
+
+            <div class="col-2  align-self-center">
+            <button nbButton size="tiny" fullWidth status="success" (click)="guardar (item)">Guardar</button>
+            </div> 
+        </div>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+
+    <nb-card *ngIf="view === 'subcategorias'">
+      <nb-card-header>
+        <div class="row">
+          <div class="col-2">
+            <button nbButton fullWidth ghost size="tiny" (click)="regresar_vista_categorias ()">< Atras</button>
+          </div>
+
+          <div class="col-8 align-self-center">
+            {{ categoria_seleccionada?.nombre }}
+          </div>
+
+          <div class="col-2">
+              <button nbButton fullWidth size="tiny" (click)="show_nuevo_subcategoria = true">Agregar</button>
+          </div>
+        </div>
+      </nb-card-header>
+
+      <nb-list>
+        <nb-list-item *ngIf="show_nuevo_subcategoria" [nbSpinner]="is_nuevo_sub_loading" nbSpinnerStatus="primary">
+        <div class="row">
+            <div class="col-8 align-self-center">
+            <input type="text" fieldSize="small" nbInput fullWidth placeholder="Nombre" [(ngModel)]="nuevo_subcategoria">
+            </div>
+
+            <div class="col-2 align-self-center">
+            <button nbButton size="tiny" fullWidth status="danger" (click)="cancel_nuevo_sub ()">Cancelar</button>
+            </div>
+
+            <div class="col-2  align-self-center">
+            <button nbButton size="tiny" fullWidth status="success" (click)="guardar_nuevo_subcategoria ()">Crear</button>
+            </div> 
+        </div>
+        </nb-list-item>
+
+        <nb-list-item *ngFor="let item of subcategorias">
+          <div class="row" *ngIf="item.edit === false">
+              <div class="col-8 align-self-center">
+                {{ item.nombre }}
+              </div>
+
+              <div class="col-2 align-self-center">
+                <button nbButton fullWidth size="tiny" ghost (click)="item.edit = true">
+                    <nb-icon icon="edit-outline"></nb-icon>Editar
+                </button>
+              </div>
+
+              <div class="col-2 align-self-center">
+                <button nbButton fullWidth status="danger" size="tiny" ghost (click)="eliminar_sub (item)"><nb-icon icon="trash-outline"></nb-icon>Eliminar</button>
+              </div>
+          </div>
+
+          <div class="row" *ngIf="item.edit === true">
+            <div class="col-8 align-self-center">
+            <input type="text" [id]="item.id" [value]="item.nombre" fieldSize="small" nbInput fullWidth placeholder="Nombre">
+            </div>
+
+            <div class="col-2 align-self-center">
+            <button nbButton size="tiny" fullWidth status="danger" (click)="item.edit = false">Cancelar</button>
+            </div>
+
+            <div class="col-2  align-self-center">
+            <button nbButton size="tiny" fullWidth status="success" (click)="guardar_sub (item)">Guardar</button>
+            </div> 
+          </div>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </div>
+</div>

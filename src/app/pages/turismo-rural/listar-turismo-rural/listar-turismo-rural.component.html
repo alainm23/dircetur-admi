@@ -1,0 +1,44 @@
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Seleccione el idioma</nb-card-header>
+    <nb-card-body>
+      <nb-radio-group [(ngModel)]="idioma_seleccionado">
+        <nb-radio value="es">Español</nb-radio>
+        <nb-radio value="en">Ingles</nb-radio>
+      </nb-radio-group>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="close_dialog (ref)">Cancelar</button>
+      &nbsp;
+      <button nbButton (click)="go_edit (ref)">Editar</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<div class="row">
+  <div class="col">
+    <nb-card>
+      <nb-card-header>
+        Lista de Circuitos
+      </nb-card-header>
+
+      <nb-list>
+        <nb-list-item *ngFor="let item of items">
+          <div class="row">
+            <div class="col-8">
+              {{ item.nombre_es }}
+            </div>
+            
+            <div class="col-2">
+              <button nbButton size="tiny" fullWidth status="danger" (click)="elimninar (item)">Eliminar</button>
+            </div>
+
+            <div class="col-2">
+              <button nbButton size="tiny" fullWidth (click)="editar (item, dialog)">Ver</button>
+            </div>
+          </div>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </div>
+</div>

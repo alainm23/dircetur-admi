@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col">
+    <nb-card>
+      <nb-card-header>
+        Actualizar Información del Solicitante <br>
+        Los campos con (*) son requeridos.
+      </nb-card-header>
+      <nb-card-body>
+        <form [formGroup]="form">
+          <div *ngIf="estado_natural">
+            <div class="form-group">
+              <label for="nombre_completo" class="label">Nombres y Apellidos: *</label>
+              <input type="text" formControlName="nombre_completo" id="nombre_completo" nbInput fullWidth>
+            </div>
+            <div class="form-group">
+              <label for="n_doc" class="label">Dni:</label>
+              <input type="number" formControlName="n_doc" id="n_doc" nbInput fullWidth disabled>
+            </div>
+          </div>
+          <div *ngIf="estado_juridico">
+            <div class="form-group">
+              <label for="razon_social" class="label">Razón Social: *</label>
+              <input type="text" formControlName="razon_social" id="razon_social" nbInput fullWidth>
+            </div>
+            <div class="form-group">
+              <label for="nombre_comercial" class="label">Nombre Comercial: *</label>
+              <input type="text" formControlName="nombre_comercial" id="nombre_comercial" nbInput fullWidth>
+            </div>
+            <div class="form-group">
+              <label for="n_doc" class="label">Ruc:</label>
+              <input type="number" formControlName="n_doc" id="n_doc" nbInput fullWidth disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="telefono" class="label">Telefono: *</label>
+            <input type="number" formControlName="telefono" id="telefono" nbInput fullWidth>
+          </div>
+          <div class="form-group">
+            <label for="correo" class="label">Correo: *</label>
+            <input type="email" formControlName="correo" id="correo" nbInput fullWidth>
+          </div>
+          <div class="form-group">
+            <label for="provincia" class="label">Provincia: *</label>
+            <select class="select-css"
+              formControlName="provincia" 
+              (ngModelChange)="provinciaChanged ($event)"
+              fullWidth 
+              id="provincia"
+              [compareWith]="compareWith">
+              <option *ngFor="let item of provincias" [ngValue]="item">
+                {{ item.nombre }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="distrito" class="label">Distrito: *</label>
+            <select class="select-css" fullWidth formControlName="distrito" id="distritos" [compareWith]="compareWith">
+              <option *ngFor="let item of distritos" [ngValue]="item">
+                {{ item.nombre }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="direccion_completa" class="label">Dirección: *</label>
+            <textarea formControlName="direccion_completa" rows="5" nbInput fullWidth shape="rectangle" id="direccion_completa" placeholder="Ingresar Dirección Completa"></textarea>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+    <div class="row">
+      <!--div class="col-6">
+        <button nbButton fullWidth status="danger">Cancelar</button>
+      </div-->
+      <div class="col-6">
+        <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submit ()">Actualizar</button>
+      </div>
+    </div>
+  </div>
+</div>

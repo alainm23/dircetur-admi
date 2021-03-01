@@ -1,0 +1,93 @@
+<div class="row">
+<div class="col-4">
+<nb-card>
+  <nb-card-header>
+    Busqueda de Beneficiario
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="form_ndoc">
+      <div class="form-group">
+        <label for="n_doc" class="label">Ingresar Dni o Ruc: *</label>
+        <input type="number" formControlName="n_doc" id="n_doc" nbInput fullWidth>
+      </div>
+    </form>
+    <div class="row">
+      <div class="col">
+        <button nbButton fullWidth status="primary" [disabled]="!form_ndoc.valid" (click)="submitNdoc ()">Buscar</button>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+</div>
+
+<div class="col-8" *ngIf="resultsolicitante">
+  <nb-card [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+    <nb-card-header>
+      Resultado de busqueda
+    </nb-card-header>
+    <nb-card-body>
+      <div *ngIf="estado_natural">
+        <label for="nombre_completo" class="label"><strong>Nombres y Apellidos: </strong>{{detalle?.nombre_completo}}</label>
+        <br>
+        <label for="n_doc" class="label"><strong>Dni: </strong>{{detalle?.n_doc}}</label>
+        <br>
+      </div>
+      <div *ngIf="estado_juridico">
+        <label for="razon_social" class="label"><strong>Razón Social: </strong>{{detalle?.razon_social}}</label>
+        <br>
+        <label for="nombre_comercial" class="label"><strong>Nombre Comercial: </strong>{{detalle?.nombre_comercial}}</label>
+        <br>
+        <label for="n_doc" class="label"><strong>Ruc: </strong>{{detalle?.n_doc}}</label>
+        <br>
+      </div>
+        <label for="telefono" class="label"><strong>Telefono: </strong>{{detalle?.telefono}}</label>
+        <br>
+        <label for="correo" class="label"><strong>Correo: </strong>{{detalle?.correo}}</label>
+        <br>
+        <label for="provincia" class="label"><strong>Provincia: </strong>{{detalle?.provincia.nombre}}</label>
+        <br>
+        <label for="distrito" class="label"><strong>Distrito: </strong>{{detalle?.distrito.nombre}}</label>
+        <br>
+        <label for="direccion_completa" class="label"><strong>Dirección: </strong>{{detalle?.direccion_completa}}</label>
+       <div class="row">
+          <div class="col-3">
+            <button ghost nbButton size="tiny" (click)="editarBeneficiario (detalle?.n_doc)" status="primary">Editar</button>
+          </div>            
+       </div>
+    </nb-card-body>
+  </nb-card>
+</div>
+<div class="col-12" *ngIf="resultsolicitudes">
+  <nb-card [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+    <nb-card-header>
+      Historial de Solicitudes
+    </nb-card-header>
+    <nb-card-body>
+      <table class="table" style="width: 100%;">
+        <thead>
+          <tr style="font-weight: bold;">
+            <td>Registrado</td>
+            <td>Aprobado</td>
+            <td>Entregado</td>
+            <td>Rechazado</td>
+            <td>Asunto</td>
+            <td>Opciones</td>
+          </tr>
+        </thead>
+        <tbody style="font-size: 12px;">
+          <tr *ngFor="let item of solicitudes">
+            <td><span>{{formatFecha(item?.fecha_solicitud)}}</span></td>
+            <td><span *ngIf="item?.estado==1 || item?.estado==2">{{formatFecha(item?.fecha_aprobacion)}}</span> <span *ngIf="item?.estado==0 || item?.estado==3">--</span></td>
+            <td><span *ngIf="item?.estado==2">{{formatFecha(item?.fecha_entregado)}}</span> <span *ngIf="item?.estado==0 || item?.estado==1 || item?.estado==3">--</span></td>
+            <td><span *ngIf="item?.estado==3">{{formatFecha(item?.fecha_rechazado)}}</span> <span *ngIf="item?.estado!=3">--</span></td>
+            <td>{{item?.asunto.nombre}}</td>
+            <td>
+              <button ghost nbButton size="tiny" (click)="detalleSolicitud (item)" status="primary">Ver Detalle</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </nb-card-body>
+  </nb-card>
+</div>
+

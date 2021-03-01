@@ -1,0 +1,44 @@
+.text-transform-none {
+    text-transform: none !important;
+    font-weight: bold;
+    padding: 0px !important;
+}
+
+.header-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.check-label {
+    display: flex;
+}
+
+
+.check-check {
+    margin-top: 5px; margin-right: 6px;
+}
+.check-check:disabled {
+    background-color: yellow;
+}
+
+.dialog {
+    height: 80%;
+    width: 80%;
+    overflow-y: scroll;
+    margin: 48px auto auto auto;
+}
+
+.form-box {
+    padding: 12px;
+    border: 1px solid #e4e4e4;
+    border-radius: 6px;
+}
+
+.form-header {
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.form-sub-header {
+    margin-bottom: 6px;
+}

@@ -1,0 +1,297 @@
+<div class="row">
+<div class="col-12">
+  <div *ngIf="mostrar_view=='historial_principal'">
+    <nb-card [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+      <nb-card-header>
+        <h5>Reporte General</h5>
+        <br>
+        <form [formGroup]="form_filtro">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group" >
+                <label for="ano" class="label">Año:</label>
+                <nb-select formControlName="ano" fullWidth>
+                  <nb-option *ngFor="let item of ano" (click)="actualizarFiltroDataano (item.value)" [value]="item.value">
+                    {{ item.value }}
+                  </nb-option>
+                </nb-select>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group" >
+                <label for="mes" class="label">Mes:</label>
+                <nb-select formControlName="mes" fullWidth>
+                  <nb-option *ngFor="let item of mes" (click)="actualizarFiltroDatames (item.value)" [value]="item.value">
+                    {{ item.nombre }}
+                  </nb-option>
+                </nb-select>
+              </div>
+            </div>
+          </div>
+        </form>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="row">
+          <div class="col-12">
+            <h5>Reporte por Provincias</h5>
+            <br>
+            <table class="table" style="width: 100%;">
+              <thead>
+                <tr style="font-weight: bold;">
+                  <td>Provincia</td>
+                  <td>Importe</td>
+                  <td>#</td>
+                  <td class="text-center">Opciones</td>
+                </tr>
+              </thead>
+              <tbody style="font-size: 12px;">
+                <tr *ngFor="let item of reportes">
+                  <td width="20">
+                    <button [disabled]="item.boton" ghost nbButton size="tiny" (click)="detalleProvincia (item?.data)" status="info">{{item?.data.nombre}}</button>
+                  </td>
+                  <td width="30"><strong *ngIf="item?.datageneral==undefined">{{0 | currency:'PEN'}}</strong><strong *ngIf="item?.datageneral!=undefined">{{Formatear(item?.datageneral,'tabla_') | currency:'PEN'}}</strong></td>
+                  <td width="25"><strong *ngIf="item?.datageneral==undefined">0</strong><strong *ngIf="item?.datageneral!=undefined">{{FormatearCantidad(item?.datageneral,'cantidad_')}}</strong></td>
+                  <td width="25">
+                    <button [disabled]="item.boton" ghost nbButton fullWidth size="tiny" (click)="detalleHistorial (item?.data)" status="info">Ver Detalle ></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div *ngIf="mostrar_view=='historial_detalle_provincia'">
+    <div class="row">
+      <div class="col-12 pb-3">
+        <button nbButton ghost size="medium" (click)="Regresar ()">< Regresar</button>
+      </div>
+    </div>
+    <nb-card [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+      <nb-card-header>
+        <h5>Filtrar</h5>
+        <br>
+        <form [formGroup]="form_filtro">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group" >
+                <label for="ano" class="label">Año:</label>
+                <nb-select formControlName="ano" fullWidth>
+                  <nb-option *ngFor="let item of ano" (click)="ProvinciaactualizarFiltroDataano (item.value)" [value]="item.value">
+                    {{ item.value }}
+                  </nb-option>
+                </nb-select>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group" >
+                <label for="mes" class="label">Mes:</label>
+                <nb-select formControlName="mes" fullWidth>
+                  <nb-option *ngFor="let item of mes" (click)="ProvinciaactualizarFiltroDatames (item.value)" [value]="item.value">
+                    {{ item.nombre }}
+                  </nb-option>
+                </nb-select>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group" >
+                <label for="asunto" class="label">Asunto:</label>
+                <nb-select formControlName="asunto" fullWidth>
+                    
+                  <nb-option (click)="filtrarXAsunto ('Mostrar Todos')" value="Mostrar Todos">
+                    Mostrar Todos
+                  </nb-option>
+                  <nb-option *ngFor="let item of asuntos" (click)="filtrarXAsunto (item)" [value]="item.id">
+                    {{ item.nombre }}
+                  </nb-option>
+                </nb-select>
+              </div>
+            </div>
+            
+          </div>
+        </form>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="row">
+          <div class="col-12">
+            <h5>Historial de Solicitudes de la Provincia: {{provincia_seleccionada}}</h5>
+            <br>
+            <table class="table" style="width: 100%;">
+              <thead>
+                <tr style="font-weight: bold;">
+                  <td>Solicitante</td>
+                  <td>N# Documento</td>
+                  <td>Fecha de registro</td>
+                  <td>Fecha de entrega</td>
+                  <td>Asunto</td>
+                  <td>Monto</td>
+                  <td>Opciones</td>
+                </tr>
+              </thead>
+              <tbody style="font-size: 12px;">
+                <tr *ngFor="let item of solicitudes | orderBy: 'fecha_solicitud'">
+      
+                  <td *ngIf="item?.nombre_completo!=undefined || item?.nombre_completo!=null">{{item?.nombre_completo}}</td>
+                  <td *ngIf="item?.nombre_comercial!=undefined || item?.nombre_comercial!=null">{{item?.nombre_comercial}}</td>
+                  <td>{{item?.n_doc}}</td>
+                  <td>{{formatFecha (item?.fecha_solicitud)}}</td>
+                  <td>{{formatFecha (item?.fecha_entregado)}}</td>
+                  <td>{{item?.asunto.nombre}}</td>
+                  <td>{{item?.monto | currency:'PEN'}}</td>
+                  <td><button ghost nbButton size="tiny" (click)="detalleSolicitud (item)" status="primary">Ver Detalle</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div *ngIf="mostrar_view=='historial_detalle_distritos'">
+    <div class="row">
+      <div class="col-12 pb-3">
+        <button nbButton ghost size="medium" (click)="Regresar ()">< Regresar</button>
+      </div>
+    </div>
+    <nb-card [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+      <nb-card-header>
+        <h5>Filtrar</h5>
+        <br>
+        <form [formGroup]="form_filtro">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group" >
+                <label for="ano" class="label">Año:</label>
+                <nb-select formControlName="ano" fullWidth>
+                  <nb-option *ngFor="let item of ano" (click)="CambiarAno (item.value)" [value]="item.value">
+                    {{ item.value }}
+                  </nb-option>
+                </nb-select>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group" >
+                <label for="mes" class="label">Mes:</label>
+                <nb-select formControlName="mes" fullWidth>
+                  <nb-option *ngFor="let item of mes" (click)="CambiarMes (item.value)" [value]="item.value">
+                    {{ item.nombre }}
+                  </nb-option>
+                </nb-select>
+              </div>
+            </div>
+          </div>
+        </form>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="row">
+          <div class="col-12">
+            <h5>Reporte por Distritos de la Provincia: {{provincia_seleccionada}}</h5>
+            <br>
+            <table class="table" style="width: 100%;">
+              <thead>
+                <tr style="font-weight: bold;">
+                  <td class="text-center">Distrito</td>
+                  <td>Importe</td>
+                  <td>#</td>
+                </tr>
+              </thead>
+              <tbody style="font-size: 12px;">
+                <tr *ngFor="let item of reportes_distritos">
+                  <td width="20">
+                    <button [disabled]="item.boton" ghost nbButton fullWidth size="tiny" (click)="detalleHistorialDistrito (item?.data)" status="info">{{item?.data.nombre}}</button>
+                  </td>
+                  <td width="30"><strong *ngIf="item?.datageneral==undefined">{{0 | currency:'PEN'}}</strong><strong *ngIf="item?.datageneral!=undefined">{{Formatear(item?.datageneral,'tabla_') | currency:'PEN'}}</strong></td>
+                  <td width="25"><strong *ngIf="item?.datageneral==undefined">0</strong><strong *ngIf="item?.datageneral!=undefined">{{FormatearCantidad(item?.datageneral,'cantidad_')}}</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div *ngIf="mostrar_view=='historial_detalle_solicitudes_distrito'">
+    <div class="row">
+      <div class="col-12 pb-3">
+        <button nbButton ghost size="medium" (click)="Regresar ()">< Regresar</button>
+      </div>
+    </div>
+    <nb-card [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+      <nb-card-header>
+        <h5>Filtrar</h5>
+        <br>
+        <form [formGroup]="form_filtro">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group" >
+                <label for="ano" class="label">Año:</label>
+                <nb-select formControlName="ano" fullWidth>
+                  <nb-option *ngFor="let item of ano" (click)="DistritoactualizarFiltroDataano (item.value)" [value]="item.value">
+                    {{ item.value }}
+                  </nb-option>
+                </nb-select>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group" >
+                <label for="mes" class="label">Mes:</label>
+                <nb-select formControlName="mes" fullWidth>
+                  <nb-option *ngFor="let item of mes" (click)="DistritoactualizarFiltroDatames (item.value)" [value]="item.value">
+                    {{ item.nombre }}
+                  </nb-option>
+                </nb-select>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group" >
+                <label for="asunto" class="label">Asunto:</label>
+                <nb-select formControlName="asunto" fullWidth>
+                  <nb-option (click)="filtrarXAsunto ('Mostrar Todos')" value="Mostrar Todos">
+                    Mostrar Todos
+                  </nb-option>
+                  <nb-option *ngFor="let item of asuntos" (click)="filtrarXAsunto (item)" [value]="item.id">
+                    {{ item.nombre }}
+                  </nb-option>
+                </nb-select>
+              </div>
+            </div>
+          </div>
+        </form>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="row">
+          <div class="col-12">
+            <h5>Historial de Solicitudes del Distrito: {{distrito_seleccionado}}</h5>
+            <br>
+            <table class="table" style="width: 100%;">
+              <thead>
+                <tr style="font-weight: bold;">
+                  <td>Solicitante</td>
+                  <td>N# Documento</td>
+                  <td>Fecha de registro</td>
+                  <td>Fecha de entrega</td>
+                  <td>Asunto</td>
+                  <td>Monto</td>
+                  <td>Opciones</td>
+                </tr>
+              </thead>
+              <tbody style="font-size: 12px;">
+                <tr *ngFor="let item of solicitudes | orderBy: 'fecha_solicitud'">
+                  <td *ngIf="item?.nombre_completo!=undefined || item?.nombre_completo!=null">{{item?.nombre_completo}}</td>
+                  <td *ngIf="item?.nombre_comercial!=undefined || item?.nombre_comercial!=null">{{item?.nombre_comercial}}</td>
+                  <td>{{item?.n_doc}}</td>
+                  <td>{{formatFecha (item?.fecha_solicitud)}}</td>
+                  <td>{{formatFecha (item?.fecha_entregado)}}</td>
+                  <td>{{item?.asunto.nombre}}</td>
+                  <td>{{item?.monto | currency:'PEN'}}</td>
+                  <td><button ghost nbButton size="tiny" (click)="detalleSolicitud (item)" status="primary">Ver Detalle</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

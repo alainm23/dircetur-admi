@@ -1,0 +1,232 @@
+<nb-card *ngIf="view === 'provincias'" [nbSpinner]="provincias_cargando" nbSpinnerStatus="primary">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-6 align-self-center">
+        Reporte general
+      </div>
+
+      <div class="col-3 align-self-center">
+        <nb-select id="rtdocumento" [(ngModel)]="year_seleccionado" fullWidth (selectedChange)="year_changed ()">
+            <nb-option value="">Todo</nb-option>
+          <nb-option value="_2019">2019</nb-option>
+          <nb-option value="_2020">2020</nb-option>
+          <nb-option value="_2021">2021</nb-option>
+          <nb-option value="_2022">2022</nb-option>
+        </nb-select>
+      </div>
+
+      <div class="col-3 align-self-center">
+        <nb-select id="rtdocumento" [(ngModel)]="mes_seleccionado" fullWidth [disabled]="year_seleccionado === ''">
+            <nb-option value="">Todo</nb-option>
+          <nb-option value="_01">Enero</nb-option>
+          <nb-option value="_02">Febrero</nb-option>
+          <nb-option value="_03">Marzo</nb-option>
+          <nb-option value="_04">Abril</nb-option>
+          <nb-option value="_05">Mayo</nb-option>
+          <nb-option value="_06">Junio</nb-option>
+          <nb-option value="_07">Julio</nb-option>
+          <nb-option value="_08">Agosto</nb-option>
+          <nb-option value="_09">Septiembre</nb-option>
+          <nb-option value="_10">Octubre</nb-option>
+          <nb-option value="_11">Noviembre</nb-option>
+          <nb-option value="_12">Diciembre</nb-option>
+        </nb-select>
+      </div>
+    </div>
+    
+  </nb-card-header>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Provincia</th>
+        <th scope="col">N° Prestadores</th>
+        <th scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of provincias">
+        <td>
+          <button class="text-transform-none" nbButton ghost status="primary" title="Listar" (click)="ver_distritos (item)">
+            {{ item.nombre }}
+          </button>
+        </td>
+        <td>{{ get_cantidad (item) }}</td>
+        <td>
+          <button class="text-transform-none" nbButton ghost status="primary" title="Listar" (click)="get_items_por_provincia (item)">
+            Ver listado >
+          </button>
+        </td>
+      </tr>
+
+      <tr>
+          <td>
+            Total
+          </td>
+  
+          <td>
+            <b>{{ get_total_provincias () }}</b>
+          </td>
+  
+          <td>
+  
+          </td>
+      </tr>
+    </tbody>
+  </table>
+</nb-card>
+
+<nb-card *ngIf="view === 'distritos'" [nbSpinner]="distritos_cargando" nbSpinnerStatus="primary">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-2 align-self-center">
+        <button class="text-transform-none" ghost nbButton (click)="ir_vista ('provincias')">< Regresar</button>
+      </div>
+
+      <div class="col-4 align-self-center">
+        Reporte general
+      </div>
+
+      <div class="col-3 align-self-center">
+        <nb-select id="rtdocumento" [(ngModel)]="year_seleccionado" fullWidth (selectedChange)="year_changed ()">
+            <nb-option value="">Todo</nb-option>
+          <nb-option value="_2019">2019</nb-option>
+          <nb-option value="_2020">2020</nb-option>
+          <nb-option value="_2021">2021</nb-option>
+          <nb-option value="_2022">2022</nb-option>
+        </nb-select>
+      </div>
+
+      <div class="col-3 align-self-center">
+        <nb-select id="rtdocumento" [(ngModel)]="mes_seleccionado" fullWidth [disabled]="year_seleccionado === ''">
+            <nb-option value="">Todo</nb-option>
+          <nb-option value="_01">Enero</nb-option>
+          <nb-option value="_02">Febrero</nb-option>
+          <nb-option value="_03">Marzo</nb-option>
+          <nb-option value="_04">Abril</nb-option>
+          <nb-option value="_05">Mayo</nb-option>
+          <nb-option value="_06">Junio</nb-option>
+          <nb-option value="_07">Julio</nb-option>
+          <nb-option value="_08">Agosto</nb-option>
+          <nb-option value="_09">Septiembre</nb-option>
+          <nb-option value="_10">Octubre</nb-option>
+          <nb-option value="_11">Noviembre</nb-option>
+          <nb-option value="_12">Diciembre</nb-option>
+        </nb-select>
+      </div>
+    </div>
+    
+  </nb-card-header>
+  <nb-card-body>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Distrito</th>
+          <th scope="col">N° Prestadores</th>
+          <th scope="col">Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of distritos">
+          <td>
+            {{ item.nombre }}
+          </td>
+          <td>{{ get_cantidad (item) }}</td>
+          <td>
+            <button class="text-transform-none" nbButton ghost status="primary" title="Listar" (click)="get_items_por_distrito (item)">
+              Ver listado >
+            </button>
+          </td>
+        </tr>
+
+        <tr>
+            <td>
+              Total
+            </td>
+    
+            <td>
+              <b>{{ get_contador_distritos () }}</b>
+            </td>
+    
+            <td>
+    
+            </td>
+          </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf="view === 'lista'">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-3 align-self-center">
+        <button class="text-transform-none" ghost nbButton (click)="ir_vista ('provincias')">< Regresar</button>
+      </div>
+      <div class="col-6 align-self-center text-center">
+        <b>Lista de agencias: {{ provincia_seleccionada.nombre }}</b>
+      </div>
+
+      <div class="col-3 align-self-center text-center">
+        Total: {{ contador }}
+      </div>
+    </div>
+  </nb-card-header>
+  
+  <nb-card-header>
+    <div class="row">
+      <div class="col-3 align-self-center">
+        <nb-select [(ngModel)]="clasificacion_seleccionado" fullWidth (selectedChange)="filtrar ()">
+          <nb-option value="">Todo</nb-option>
+          <nb-option *ngFor="let item of clasificaciones" [value]="item.id">
+            {{ item.nombre }}
+          </nb-option>
+        </nb-select>
+      </div>
+
+      <div class="col-3 align-self-center">
+        <nb-select [(ngModel)]="categoria_seleccionado" fullWidth (selectedChange)="filtrar ()">
+          <nb-option value="">Todo</nb-option>
+          <nb-option *ngFor="let item of categorias" [value]="item.id">
+            {{ item.nombre }}
+          </nb-option>
+        </nb-select>
+      </div>
+
+      <div class="col-3 align-self-center">
+      </div>
+
+      <div class="col-3 align-self-center">
+        <button fullWidth nbButton size="small" (click)="exportAsXLSX ()">Exportar<nb-icon icon="save-outline"></nb-icon></button>
+      </div>
+    </div>
+  </nb-card-header>
+  
+  <table class="table table-bordered table-striped" [nbSpinner]="lista_cargando" nbSpinnerStatus="primary">
+    <thead>
+      <tr>
+        <th scope="col">Nombre comercial</th>
+        <th scope="col">Telefono</th>
+        <th scope="col">Direccion</th>
+        <th scope="col">Representante legal</th>
+        <th scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items">
+        <td>{{ item.nombre_comercial }}</td>
+        <td>{{ item.telefono }}</td>
+        <td>{{ item.direccion }}</td>
+        <td style="font-size: 11px">
+          <b>Nombre: </b>{{ item.representante_nombre }}
+          <br>
+          <b>{{ item.representante_tdoc }}: </b>{{ item.representante_ndoc }}
+          <br>
+          <b>Telefono: </b>{{ item.representante_telefono }}
+          <br>
+          <b>Correo: </b>{{ item.representante_correo }}
+        </td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</nb-card>

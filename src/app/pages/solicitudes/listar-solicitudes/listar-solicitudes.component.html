@@ -1,0 +1,28 @@
+<div class="row">
+<div class="col-12">
+  <nb-card>
+    <nb-card-header>
+        Listado de Solicitudes <br>
+        Monto Total Aprobado= {{acum_montos_aprobados}}
+    </nb-card-header>
+    <nb-list>
+      <nb-list-item *ngFor="let item of items">
+        <div class="row">
+          <div class="col-8">
+            <nb-user [name]="item.nombre" [title]="getData (item)">
+            </nb-user>
+          </div>
+          <div class="col-2">
+            <button nbButton size="tiny" fullWidth class="btn btn-primary" (click)="estado (item,1)">Aprobar</button>
+          </div>
+          <div class="col-2">
+            <button nbButton size="tiny" fullWidth status="danger" (click)="estado (item,2)">Rechazar</button>
+          </div>
+          <div class="col-2">
+            <button nbButton size="tiny" fullWidth (click)="verDetalle (item)">Ver Detalle</button>
+          </div>
+        </div>
+      </nb-list-item>
+    </nb-list>
+  </nb-card>
+</div>

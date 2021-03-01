@@ -1,0 +1,69 @@
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Seleccione el idioma</nb-card-header>
+    <nb-card-body>
+      <nb-radio-group [(ngModel)]="idioma_seleccionado">
+        <nb-radio value="es">Español</nb-radio>
+        <nb-radio value="en">Ingles</nb-radio>
+      </nb-radio-group>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="close_dialog (ref)">Cancelar</button>
+      &nbsp;
+      <button nbButton (click)="go_edit (ref)">Editar</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<div class="row">
+  <div class="col-4">
+    <nb-card>
+      <nb-card-header>
+        
+      </nb-card-header>
+      <nb-card-body>
+        <div class="form-group">
+          <label for="meses" class="label">Mes:</label>
+          <nb-select [(ngModel)]="messelected" fullWidth id="meses">
+            <nb-option *ngFor="let item of meses" [value]="item">
+              {{ item.mes }}
+            </nb-option>
+          </nb-select>
+        </div>
+        <div class="row">
+          <div class="col">
+            <button nbButton fullWidth status="primary" (click)="submit ()">Buscar</button>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+  <div class="col-8">
+    <nb-card>
+      <nb-card-header>
+        Resultado de busqueda
+      </nb-card-header>
+      <nb-list>
+        <nb-list-item *ngFor="let item of items">
+          <div class="row">
+            <div class="col-2">
+              {{ get_fecha (item.ref) }}
+            </div>
+            <div class="col-6">
+              {{ get_data (item.ref) }}
+            </div>
+
+            <div class="col-2">
+              <button nbButton size="tiny" fullWidth status="danger" (click)="elimninar (item)">Eliminar</button>
+            </div>
+
+            <div class="col-2">
+              <button nbButton size="tiny" fullWidth (click)="editar (item.data, dialog)">Editar</button>
+            </div>
+          </div>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </div>
+</div>

@@ -1,0 +1,124 @@
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card [nbSpinner]="is_upload" nbSpinnerStatus="primary">
+    <nb-card-header>Subir imagen</nb-card-header>
+    <nb-card-body>
+      <img class="imagen_preview" [src]="imagen_preview">
+    </nb-card-body>
+
+    <nb-card-footer *ngIf="uploadPercent !== 0">
+      <div class="form-group">
+        <nb-progress-bar [value]="uploadPercent" id="progress"></nb-progress-bar>
+      </div>
+    </nb-card-footer>
+    
+    <nb-card-footer>
+      <div class="row">
+        <div class="col-6">
+          <button nbButton fullWidth status="danger" (click)="ref.close()">Cancelar</button>
+        </div>
+  
+        <div class="col-6">
+          <button nbButton fullWidth status="primary" (click)="subir (ref)">Subir</button>
+        </div>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<form [formGroup]="form">
+    <div class="row" [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+      <div class="col">
+        <nb-card>
+          <nb-card-header>Detalle del Blog ({{ idioma }})</nb-card-header>
+          <nb-card-body>
+            <div class="form-group">
+              <label for="titulo" class="label">Titulo:</label>
+              <input type="text" [formControlName]="'titulo_' + idioma" id="titulo" nbInput fullWidth>
+            </div>
+  
+            <div class="form-group">
+              <label for="autor" class="label">Autor:</label>
+              <input type="text" formControlName="autor" id="autor" nbInput fullWidth>
+            </div>
+
+            <div class="form-group">
+              <label for="resumen" class="label">Resumen:</label>
+              <textarea [formControlName]="'resumen_' + idioma" rows="5" nbInput fullWidth shape="rectangle" id="resumen"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="categoria" class="label">Categoria:</label>
+              <select class="select-css"
+                formControlName="categoria" 
+                fullWidth 
+                id="categoria"
+                [compareWith]="compareWith">
+                <option *ngFor="let item of categorias" [ngValue]="item">
+                  {{ item.nombre }}
+                </option>
+              </select>
+            </div>
+          </nb-card-body>
+        </nb-card>
+  
+        <nb-card>
+          <nb-card-header>
+            Detalles
+          </nb-card-header>
+          <nb-card-body>
+            <ckeditor [editor]="Editor" [config]="config" [formControlName]="'detalle_' + idioma"></ckeditor>
+          </nb-card-body>
+        </nb-card>
+      
+        <nb-card>
+          <nb-card-header>
+            <div class="row">
+              <div class="col-9">
+                Imagenes (Recomendados: Alto: 600px Ancho 600px)
+              </div>
+      
+              <div class="col-3">
+                <div>
+                  <button fullWidth nbButton size="tiny" (click)="fileInput.click ()">Subir imagen</button>
+                  <input hidden type="file" accept="image/*" #fileInput (change)="changeListener ($event, dialog)">
+                </div>
+              </div>
+            </div>
+          </nb-card-header>
+
+          <nb-card-body>
+            <nb-list>
+              <nb-list-item *ngFor="let item of imagenes">
+                <div class="row">
+                  <div class="col-3 align-self-center">
+                    <img class="img-preview" [src]="item.url">
+                  </div>
+                  
+                  <div class="col-6">
+                    <!--div class="form-group" *ngIf="item.uploadPercent !== 0">
+                      <label for="progress" class="label">Subiendo al servividor...</label>
+                      <nb-progress-bar [value]="item.uploadPercent" id="progress"></nb-progress-bar>
+                    </div-->
+                  </div>
+                  
+                  <div class="col-3 align-self-center">
+                    <button nbButton size="tiny" fullWidth status="danger" (click)="eliminarImagen (item)">Eliminar</button>
+                  </div>
+                </div>
+              </nb-list-item>
+            </nb-list>
+          </nb-card-body>
+        </nb-card>
+
+        <div class="row">
+          <div class="col-6">
+            <button nbButton fullWidth status="danger" (click)="elimninar ()">Eliminar</button>
+          </div>
+    
+          <div class="col-6">
+            <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submit ()">Actualizar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>

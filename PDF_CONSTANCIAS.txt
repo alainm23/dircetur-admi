@@ -1,0 +1,333 @@
+// AGENCIA VIRTUAL
+var doc = new PDFDocument({
+    size: [612.00, 936.00]
+});
+var stream = doc.pipe(blobStream());
+
+doc.image('data:image/png;base64,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',
+450, 690, {width: 100});
+
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+
+doc.font('Helvetica-Bold').fontSize (18)
+.text('                       ', {align: 'center'});
+
+doc.moveDown ();
+
+doc.font('Helvetica-Bold').fontSize (15)
+.text('                                                 ', {align: 'center'});
+
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (11)
+  .text('De conformidad con el Decreto Supremo N° 005-2020-MINCETUR', {align: 'center'});
+  
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+
+doc.font('Helvetica-Bold').fontSize (20)
+.text('N° 0001-2020 AV – GR / DIRCETUR', {align: 'center'});
+
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.text ('Mediante el presente documento, la Dirección Regional de Comercio Exterior y Turismo  DEJA CONSTANCIA que la agencia de viajes y turismo denominada:', {continued: true, align: 'justify', lineGap: 3});
+
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.font ('Helvetica-Bold').fontSize (14)
+.text ('NOMBRE COMERCIAL', {continued: false, align: 'center', lineGap: 3});
+
+doc.moveDown ();
+
+doc.font ('Helvetica').fontSize (12)
+.font ('Helvetica').fontSize (12)
+.text ('Se encuentra inscrita en el Directorio Nacional de Prestadores de Servicios Turísticos Calificados, bajo la clase de:', {align: 'justify', lineGap: 3});
+
+doc.moveDown ();
+
+doc.font('Helvetica-Bold').fontSize (12)
+.text ('CLASIFICACION', {align: 'center'});
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.text ('Modalidad en la que ofrece y comercializa sus servicios: ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('Exclusivamente digital'.toUpperCase ());
+
+doc.font('Helvetica').fontSize (12)
+.text ('Siendo la Razón Social: ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('RAZON SOCIAL ', {continued: true, lineGap: 3})
+.font ('Helvetica').fontSize (12)
+.text ('N° de RUC' + ' ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('1000000000');
+
+doc.font('Helvetica').fontSize (12)
+.text ('Domicilio legal: ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('DOMICILIO LEGAL');
+
+doc.font('Helvetica').fontSize (12)
+.text ('Región: ' , {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('REGIÓN', {continued: true, lineGap: 3})
+.font('Helvetica').fontSize (12)
+.text (', Provincia: ' , {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('PROVINCIA', {continued: true, lineGap: 3})
+.font('Helvetica').fontSize (12)
+.text (', Distrito: ' , {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('DISTRITO');
+
+doc.font('Helvetica').fontSize (12)
+.text ('Fecha de inicio de operaciones: ', {continued: true})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('FECHA DE INICIO DE OPERACIONES');
+
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.text ('Cusco, 23 de abril del 2020', {align: 'right'});
+
+// end and display the document in the iframe to the right
+doc.end();
+stream.on('finish', function() {
+  iframe.src = stream.toBlobURL('application/pdf');
+});
+
+// AGENCIA FISICA / VIRTUAL
+var doc = new PDFDocument({
+    size: [612.00, 936.00]
+});
+var stream = doc.pipe(blobStream());
+
+doc.image('data:image/png;base64,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',
+450, 690, {width: 100});
+  
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+
+doc.font('Helvetica-Bold').fontSize (18)
+.text('                       ', {align: 'center'});
+
+doc.moveDown ();
+
+doc.font('Helvetica-Bold').fontSize (15)
+.text('                                                 ', {align: 'center'});
+
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (11)
+  .text('De conformidad con el Decreto Supremo N° 005-2020-MINCETUR', {align: 'center'});
+  
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+
+doc.font('Helvetica-Bold').fontSize (20)
+.text('N° 0001-2020 AF – GR / DIRCETUR', {align: 'center'});
+
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.text ('Mediante el presente documento, la Dirección Regional de Comercio Exterior y Turismo  DEJA CONSTANCIA que la agencia de viajes y turismo denominada:', {continued: true, align: 'justify', lineGap: 3});
+
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.font ('Helvetica-Bold').fontSize (14)
+.text ('NOMBRE COMERCIAL', {continued: false, align: 'center', lineGap: 3});
+
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.font ('Helvetica').fontSize (12)
+.text ('Ubicada en ', {continued: true, align: 'justify', lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('DIRECCION', {continued: true, align: 'justify', lineGap: 3})
+.font ('Helvetica').fontSize (12)
+.text (', distrito de ', {continued: true, align: 'justify', lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('DISTRTITO', {continued: true, align: 'justify', lineGap: 3})
+.font ('Helvetica').fontSize (12)
+.text (', provincia de ', {continued: true, align: 'justify', lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('PROVINCIA', {continued: true, align: 'justify', lineGap: 3})
+.font ('Helvetica').fontSize (12)
+.text (', región ', {continued: true, align: 'justify', lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('CUSCO', {continued: true, align: 'justify', lineGap: 3})
+.font ('Helvetica').fontSize (12)
+.text ('; se encuentra inscrita en el Directorio Nacional de Prestadores de Servicios Turísticos Calificados, bajo la clase de:', {align: 'justify', lineGap: 6});
+ 
+
+doc.moveDown ();
+
+doc.font('Helvetica-Bold').fontSize (12)
+.text ('CLASIFICACION', {align: 'center'});
+
+doc.moveDown ();
+
+
+doc.font('Helvetica').fontSize (12)
+.text ('Modalidad en la que ofrece y comercializa sus servicios: ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('PRESENCIAL / DIGITAL'.toUpperCase ());
+
+doc.font('Helvetica').fontSize (12)
+.text ('Siendo la Razón Social: ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('RAZON SOCIAL ', {continued: true, lineGap: 3})
+.font ('Helvetica').fontSize (12)
+.text ('N° de RUC' + ' ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('1000000000');
+
+doc.font('Helvetica').fontSize (12)
+.text ('Domicilio legal: ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('DOMICILIO LEGAL');
+
+doc.font('Helvetica').fontSize (12)
+.text ('Región: ' , {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('REGIÓN', {continued: true, lineGap: 3})
+.font('Helvetica').fontSize (12)
+.text (', Provincia: ' , {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('PROVINCIA', {continued: true, lineGap: 3})
+.font('Helvetica').fontSize (12)
+.text (', Distrito: ' , {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('DISTRITO');
+
+doc.font('Helvetica').fontSize (12)
+.text ('Fecha de inicio de operaciones: ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('FECHA DE INICIO DE OPERACIONES');
+
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.text ('Cusco, 23 de abril del 2020', {align: 'right'});
+
+// end and display the document in the iframe to the right
+doc.end();
+stream.on('finish', function() {
+  iframe.src = stream.toBlobURL('application/pdf');
+});
+
+// ALOJAMIENTO
+var doc = new PDFDocument({
+    size: [612.00, 936.00]
+});
+var stream = doc.pipe(blobStream());
+
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+
+doc.font('Helvetica-Bold').fontSize (18)
+.text('                       ', {align: 'center'});
+
+doc.moveDown ();
+
+doc.font('Helvetica-Bold').fontSize (15)
+.text('                                           ', {align: 'center'});
+
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (11)
+  .text('De conformidad con el Decreto Supremo N° 001-2015-MINCETUR', {align: 'center'});
+  
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.text('            ', {align: 'right'});
+
+doc.moveDown ();
+doc.moveDown ();
+
+doc.font('Helvetica-Bold').fontSize (20)
+.text('N° 0001-2020 EH – GR / DIRCETUR', {align: 'center'});
+
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.text ('Mediante el presente, se deja constancia que el hospedaje:', {lineGap: 3});
+
+doc.moveDown ();
+
+doc.font ('Helvetica-Bold').fontSize (14)
+.text ('NOMBRE COMERCIAL', {align: 'center'});
+
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.text ('Ubicado en: ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('DIRECCION');
+
+doc.font('Helvetica').fontSize (12)
+.text ('Distrito: ' , {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('DISTRTITO', {continued: true, lineGap: 3})
+.font('Helvetica').fontSize (12)
+.text (', Provincia: ' , {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('PROVINCIA', {continued: true, lineGap: 3})
+.font('Helvetica').fontSize (12)
+.text (', Región: ' , {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('Cusco'.toUpperCase ());
+
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.text ('Ha cumplido con presentar la DECLARACIÓN JURADA de conformidad con el Decreto Supremo N° 001-2015-MINCETUR, como HOSPEDAJE SIN CLASE NI CATEGORÍA.', {lineGap: 3});
+
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.text ('Siendo la Razón Social: ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('RAZON SOCIAL ', {continued: true, lineGap: 3})
+.font ('Helvetica').fontSize (12)
+.text ('N° de RUC' + ' ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('12312312311231');
+
+doc.font('Helvetica').fontSize (12)
+.text ('Representado por: ', {continued: true, lineGap: 3})
+.font ('Helvetica-Bold').fontSize (12)
+.text ('REPRESENTANTE LEGAL', {continued: true, lineGap: 3})
+ 
+doc.moveDown ();
+
+doc.font('Helvetica').fontSize (12)
+.text ('Cusco, 23 de abril del 2020', {align: 'right'});
+
+doc.end();
+stream.on('finish', function() {
+  iframe.src = stream.toBlobURL('application/pdf');
+});

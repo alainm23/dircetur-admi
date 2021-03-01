@@ -1,0 +1,191 @@
+<div class="row">
+<div class="col-4">
+<nb-card>
+  <nb-card-header>
+    Realizar Busqueda de Solicitudes
+  </nb-card-header>
+  <nb-card-body>
+      <div class="form-group">
+        <label class="label">Seleccionar Tipo de Busqueda:</label>
+        <nb-select fullWidth placeholder="Seleccionar Tipo" >
+          <nb-option (click)="tipoFiltro (1)" value="1">
+            Filtrar por Provincia y Distrito.
+          </nb-option>
+          <nb-option (click)="tipoFiltro (2)" value="2">
+            Filtrar por Provincia, Distrito y Estado de la Solicitud.
+          </nb-option>
+          <nb-option (click)="tipoFiltro (3)" value="3">
+            Filtrar por Provincia, Distrito y Tipo de Capacitación.
+          </nb-option>
+          <nb-option (click)="tipoFiltro (4)" value="4">
+            Filtrar por Provincia, Distrito, Estado de la Solicitud y Tipo de Capacitación.
+          </nb-option>
+        </nb-select>
+      </div>
+      <div *ngIf="tipo_filtro==1">
+        <form [formGroup]="form">
+          <div class="form-group" >
+            <label for="provincia" class="label">Provincia:</label>
+            <nb-select formControlName="provincia" fullWidth placeholder="Provincia" id="provincia" (selectedChange)="provinciaChanged ($event)">
+              <nb-option *ngFor="let item of provincias" [value]="item">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="form-group">
+            <label for="distrito" class="label">Distrito:</label>
+            <nb-select formControlName="distrito" fullWidth placeholder="Distrito" id="distrito"  [disabled]="esta_distritos_cargando">
+              <nb-option *ngFor="let item of distritos" [value]="item">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submit ()">Buscar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div *ngIf="tipo_filtro==2">
+        <form [formGroup]="form2">
+          <div class="form-group" >
+            <label for="provincia" class="label">Provincia:</label>
+            <nb-select formControlName="provincia" fullWidth placeholder="Provincia" id="provincia" (selectedChange)="provinciaChanged ($event)">
+              <nb-option *ngFor="let item of provincias" [value]="item">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="form-group">
+            <label for="distrito" class="label">Distrito:</label>
+            <nb-select formControlName="distrito" fullWidth placeholder="Distrito" id="distrito"  [disabled]="esta_distritos_cargando">
+              <nb-option *ngFor="let item of distritos" [value]="item">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="form-group">
+            <label for="estado" class="label">Seleccionar Estado de las Solicitudes:</label>
+            <nb-select formControlName="estado" fullWidth placeholder="Seleccionar Estado" id="estado">
+              <nb-option *ngFor="let item of estados_solicitudes" [value]="item.value">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button nbButton fullWidth status="primary" [disabled]="!form2.valid" (click)="submit ()">Buscar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div *ngIf="tipo_filtro==3">
+        <form [formGroup]="form3">
+          <div class="form-group" >
+            <label for="provincia" class="label">Provincia:</label>
+            <nb-select formControlName="provincia" fullWidth placeholder="Provincia" id="provincia" (selectedChange)="provinciaChanged ($event)">
+              <nb-option *ngFor="let item of provincias" [value]="item">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="form-group">
+            <label for="distrito" class="label">Distrito:</label>
+            <nb-select formControlName="distrito" fullWidth placeholder="Distrito" id="distrito"  [disabled]="esta_distritos_cargando">
+              <nb-option *ngFor="let item of distritos" [value]="item">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="form-group">
+            <label for="capacitacion" class="label">Seleccionar Capacitación:</label>
+            <nb-select formControlName="capacitacion" fullWidth placeholder="Seleccionar Capacitación" id="capacitacion">
+              <nb-option *ngFor="let item of capacitaciones" [value]="item">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button nbButton fullWidth status="primary" [disabled]="!form3.valid" (click)="submit ()">Buscar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div *ngIf="tipo_filtro==4">
+        <form [formGroup]="form4">
+          <div class="form-group" >
+            <label for="provincia" class="label">Provincia:</label>
+            <nb-select formControlName="provincia" fullWidth placeholder="Provincia" id="provincia" (selectedChange)="provinciaChanged ($event)">
+              <nb-option *ngFor="let item of provincias" [value]="item">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="form-group">
+            <label for="distrito" class="label">Distrito:</label>
+            <nb-select formControlName="distrito" fullWidth placeholder="Distrito" id="distrito"  [disabled]="esta_distritos_cargando">
+              <nb-option *ngFor="let item of distritos" [value]="item">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="form-group">
+            <label for="estado" class="label">Seleccionar Estado de las Solicitudes:</label>
+            <nb-select formControlName="estado" fullWidth placeholder="Seleccionar Estado" id="estado">
+              <nb-option *ngFor="let item of estados_solicitudes" [value]="item.value">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="form-group">
+            <label for="capacitacion" class="label">Seleccionar Capacitación:</label>
+            <nb-select formControlName="capacitacion" fullWidth placeholder="Seleccionar Capacitación" id="capacitacion">
+              <nb-option *ngFor="let item of capacitaciones" [value]="item">
+                {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button nbButton fullWidth status="primary" [disabled]="!form4.valid" (click)="submit ()">Buscar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+  </nb-card-body>
+</nb-card>
+</div>
+
+<div class="col-8">
+  <nb-card>
+    <nb-card-header>
+      Resultado de busqueda
+      <br>
+      <label *ngIf="resultados_solicitudes">
+        Monto Total Aprobado= {{acum_montos_aprobados}}
+      </label>
+    </nb-card-header>
+    <nb-list *ngIf="resultados_solicitudes">
+        <nb-list-item *ngFor="let item of items">
+          <div class="row">
+            <div class="col-8">
+              <nb-user [name]="item.nombre" [title]="getData (item)">
+              </nb-user>
+            </div>
+            <div class="col-2">
+              <button nbButton size="tiny" fullWidth class="btn btn-primary" (click)="estado (item,1)">Aprobar</button>
+            </div>
+            <div class="col-2">
+              <button nbButton size="tiny" fullWidth status="danger" (click)="estado (item,2)">Rechazar</button>
+            </div>
+            <div class="col-2">
+              <button nbButton size="tiny" fullWidth (click)="verDetalle (item)">Ver Detalle</button>
+            </div>
+          </div>
+        </nb-list-item>
+    </nb-list>
+  </nb-card>
+</div>
+    

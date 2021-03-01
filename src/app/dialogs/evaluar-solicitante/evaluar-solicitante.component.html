@@ -1,0 +1,66 @@
+<div class="row fondo-evaluar-solicitante">
+    <div class="pt-4" style="width: 600px;">
+      <nb-card>
+        <nb-card-body>
+          <h4>Historial</h4>
+          <br>
+          <table class="table" style="width: 100%;">
+            <thead>
+              <tr style="font-weight: bold;">
+                <td>Solicitante</td>
+                <td>Fecha de registro</td>
+                <td>Asunto</td>
+                <td>Estado</td>
+              </tr>
+            </thead>
+            <tbody style="font-size: 12px;">
+              <tr *ngFor="let item of solicitudes">
+                <td width="20" *ngIf="id_solicitud!=item?.id">{{item?.nombre}}</td>
+                <td width="30" *ngIf="id_solicitud!=item?.id">{{formatFecha(item?.fecha_solicitud)}}</td>
+                <td width="25" *ngIf="id_solicitud!=item?.id">{{item?.asunto.nombre}}</td>
+                <td width="25" *ngIf="id_solicitud!=item?.id">{{item?.estadonombre}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="pt-4" style="width: 500px;">
+      <nb-card>
+        <nb-card-header>
+          <h4>Datos del beneficiario</h4>
+          <br>
+          <label>
+            <strong>Nombre: </strong>{{solicitud?.nombre}}
+          </label><br>
+          <label>
+            <strong>Tipo: </strong>{{solicitud?.tipo}}
+          </label><br>
+          <label>
+            <strong>Estado: </strong>{{solicitud?.estadonombre}}
+          </label><br>
+          <label>
+            <strong>Asunto: </strong>{{solicitud?.asunto.nombre}}
+          </label><br>
+          <div *ngIf="mostrar_capacitacion">
+            <label>
+              <strong>Capacitación: </strong>{{solicitud?.capacitacion.nombre}}
+            </label><br>
+          </div>
+          <label>
+            <strong>Descripción: </strong>{{solicitud_detalle?.descripcion}}
+          </label>
+          <br>
+          <br>
+          <div class="row"> 
+            <div class="col-6">
+              <button nbButton size="medium" (click)="changeEstado(1)">Aprobar</button>
+            </div>
+            <div class="col-6">
+              <button nbButton size="medium" status="danger" (click)="changeEstado(3)">Rechazar</button>
+            </div>
+          </div>
+        </nb-card-header>
+      </nb-card>
+    </div>
+</div>

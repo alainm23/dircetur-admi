@@ -1,0 +1,103 @@
+<div class="row">
+  <div class="col-8">
+    <nb-card>
+      <nb-card-header>
+        Detalle de la Solicitud
+      </nb-card-header>
+      <nb-card-body>
+        <form [formGroup]="form">
+          <div *ngIf="estado_natural">
+            <div class="form-group">
+              <label for="nombre_completo" class="label">Nombres y Apellidos: *</label>
+              <input type="text" formControlName="nombre_completo" id="nombre_completo" nbInput fullWidth disabled>
+            </div>
+            <div class="form-group">
+              <label for="n_doc" class="label">Ingresar Dni: *</label>
+              <input type="number" formControlName="n_doc" id="n_doc" nbInput fullWidth disabled>
+            </div>
+          </div>
+          <div *ngIf="estado_juridico">
+            <div class="form-group">
+              <label for="razon_social" class="label">Razón Social: *</label>
+              <input type="text" formControlName="razon_social" id="razon_social" nbInput fullWidth disabled>
+            </div>
+            <div class="form-group">
+              <label for="nombre_comercial" class="label">Nombre Comercial: *</label>
+              <input type="text" formControlName="nombre_comercial" id="nombre_comercial" nbInput fullWidth disabled>
+            </div>
+            <div class="form-group">
+              <label for="n_doc" class="label">Ingresar Ruc: *</label>
+              <input type="number" formControlName="n_doc" id="n_doc" nbInput fullWidth disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="label">Correo:</label>
+            <input type="email" [value]="solicitante?.correo" nbInput fullWidth disabled>
+          </div>
+          <div class="form-group">
+            <label class="label">Teléfono:</label>
+            <input type="number" [value]="solicitante?.telefono" nbInput fullWidth disabled>
+          </div>
+          <div class="form-group">
+            <label for="provincia" class="label">Provincia:</label>
+            <input type="text" formControlName="provincia" id="provincia" nbInput fullWidth disabled>
+          </div>
+          <div class="form-group">
+            <label for="distrito" class="label">Distrito:</label>
+            <input type="text" formControlName="distrito" id="distrito" nbInput fullWidth disabled>
+          </div>
+          <div class="form-group">
+            <label for="asunto" class="label">Asunto:</label>
+            <input type="text" formControlName="asunto" id="asunto" nbInput fullWidth disabled>
+          </div>
+          <div class="form-group" *ngIf="estado_capacitacion">
+            <label for="capacitacion" class="label">Tipo de Capacitación:</label>
+            <input type="text" formControlName="capacitacion" id="capacitacion" nbInput fullWidth disabled>
+          </div>
+          <div class="form-group">
+            <label class="label">Estado de la Solicitud: {{estado_solicitud}}</label>
+          </div>
+          <div class="form-group">
+            <label class="label">Fecha de la Solicitud: {{detalle?.fecha_solicitud}}</label>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-4" *ngIf="estado_juridico">
+    <nb-card>
+      <nb-card-header>
+        Información Detalle
+      </nb-card-header>
+      <nb-card-body>
+        <div class="form-group">
+          <label class="label">Nombre Completo: {{informacion_detalle?.nombre_completo_contacto}}</label>
+        </div>
+        <div class="form-group">
+          <label class="label">Dni: {{informacion_detalle?.dni_contacto}}</label>
+        </div>
+        <div class="form-group">
+          <label class="label">Correo: {{informacion_detalle?.correo_contacto}}</label>
+        </div>
+        <div class="form-group">
+          <label class="label">Teléfono: {{informacion_detalle?.telefono_contacto}}</label>
+        </div>
+        <div class="form-group">
+          <label class="label">Descripción: {{informacion_detalle?.descripcion}}</label>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-4" *ngIf="estado_natural">
+    <nb-card>
+      <nb-card-header>
+        Información Detalle
+      </nb-card-header>
+      <nb-card-body>
+        <div class="form-group">
+          <label class="label">Descripción: {{informacion_detalle?.descripcion}}</label>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

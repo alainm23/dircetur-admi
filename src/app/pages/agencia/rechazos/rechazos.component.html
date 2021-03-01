@@ -1,0 +1,25 @@
+<nb-card>
+    <nb-card-header>
+        Rechazos
+    </nb-card-header>
+    <table class="table table-bordered" [nbSpinner]="lista_cargando" nbSpinnerStatus="primary">
+        <thead>
+          <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Nombre comercial</th>
+            <th scope="col">RUC</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Motivo</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of items">
+            <td>{{ item.fecha }}</td>
+            <td>{{ item.nombre }}</td>
+            <td>{{ item.ruc }}</td>
+            <td>{{ item.correo }}</td>
+            <td>{{ item.motivo }}</td>
+        </tr>
+        </tbody>
+      </table>
+</nb-card>

@@ -1,0 +1,186 @@
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card [nbSpinner]="is_upload" nbSpinnerStatus="primary">
+    <nb-card-header>Subir imagen</nb-card-header>
+    <nb-card-body>
+      <img class="imagen_preview" [src]="imagen_preview">
+    </nb-card-body>
+
+    <nb-card-footer *ngIf="uploadPercent !== 0">
+      <div class="form-group">
+        <nb-progress-bar [value]="uploadPercent" id="progress"></nb-progress-bar>
+      </div>
+    </nb-card-footer>
+    
+    <nb-card-footer>
+      <div class="row">
+        <div class="col-6">
+          <button nbButton fullWidth status="danger" (click)="ref.close()">Cancelar</button>
+        </div>
+  
+        <div class="col-6">
+          <button nbButton fullWidth status="primary" (click)="subir (ref)">Subir</button>
+        </div>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<div class="row">
+    <div class="col">
+      <form [formGroup]="form">
+        <nb-card>
+          <nb-card-header>Informacion</nb-card-header>
+          <nb-card-body>
+            <div class="form-group">
+              <label for="nombre" class="label">Nombre:</label>
+              <input type="text" [formControlName]="'nombre_' + idioma" id="nombre" nbInput fullWidth>
+            </div>
+
+            <div class="form-group">
+              <label for="descripcion" class="label">Descripcion:</label>
+              <textarea [formControlName]="'descripcion_' + idioma" rows="5" nbInput fullWidth shape="rectangle" id="descripcion"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="donde" class="label">Donde:</label>
+              <input type="text" [formControlName]="'donde_' + idioma" id="donde" nbInput fullWidth>
+            </div>
+
+            <div class="form-group">
+              <label for="altitud" class="label">Altitud:</label>
+              <input type="text" [formControlName]="'altitud_' + idioma" id="altitud" nbInput fullWidth>
+            </div>
+
+            <div class="form-group">
+              <label for="incluye" class="label">Incluye:</label>
+              <textarea [formControlName]="'incluye_' + idioma" rows="5" nbInput fullWidth shape="rectangle" id="incluye"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="no_incluye" class="label">No Incluye:</label>
+              <textarea [formControlName]="'no_incluye_' + idioma" rows="5" nbInput fullWidth shape="rectangle" id="no_incluye"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="tags" class="label">Etiquetas:</label>
+              <input type="text" id="tags" nbInput fullWidth placeholder="Registra una etiqueta..." (keyup.enter)="agregar_tag ($event)">
+            </div>
+
+            <div class="form-group" style="display: flex;">
+              <div *ngFor="let item of tags" style="display: flex;">
+                <span style="margin: 0px 6px 0px 0px;" class="badge badge-light">
+                  {{ item.nombre }}
+                </span>
+
+                <span style="margin: 0px 6px 0px 0px; border-radius: 50%;" class="badge badge-danger" (click)="eliminar_tag (item)">
+                  x
+                </span>
+              </div>
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </form>
+
+      <nb-card>
+        <nb-card-header>
+          <div class="row">
+            <div class="col-9">
+              Imagenes (Recomendados: Alto: 600px Ancho 600px)
+            </div>
+    
+            <div class="col-3">
+              <div>
+                <button fullWidth nbButton size="tiny" (click)="fileInput.click ()">Subir imagen</button>
+                <input hidden type="file" accept="image/*" #fileInput (change)="changeListener ($event, dialog)">
+              </div>
+            </div>
+          </div>
+        </nb-card-header>
+
+        <nb-card-body>
+          <nb-list>
+            <nb-list-item *ngFor="let item of imagenes">
+              <div class="row">
+                <div class="col-3 align-self-center">
+                  <img class="img-preview" [src]="item.url">
+                </div>
+                
+                <div class="col-6">
+
+                </div>
+                
+                <div class="col-3 align-self-center">
+                  <button nbButton size="tiny" fullWidth status="danger" (click)="eliminarImagen (item)">Eliminar</button>
+                </div>
+              </div>
+            </nb-list-item>
+          </nb-list>
+        </nb-card-body>
+      </nb-card>
+
+      <nb-card>
+        <nb-card-header>
+          <div class="row">
+            <div class="col-9">
+              Dias
+            </div>
+  
+            <div class="col-3">
+              <button nbButton fullWidth size="tiny" (click)="agregarDia ()">Agregar Dia</button>
+            </div>
+          </div>
+        </nb-card-header>
+      </nb-card>
+
+      <nb-card *ngFor="let d of dias">
+        <nb-card-header>
+          <div class="row">
+            <div class="col-4">
+              <input [(ngModel)]="d ['nombre_' + idioma]" type="text" id="nombre" nbInput fullWidth>
+            </div>
+  
+            <div class="col-3">
+              <button nbButton size="tiny" fullWidth status="danger" (click)="eliminarDia (d)">
+                Eliminar Dia
+              </button>
+            </div>
+  
+            <div class="col-5">
+              <button nbButton size="tiny" fullWidth status="primary" (click)="agregarActividad (d)">
+                Agregar Actividad
+              </button>
+            </div>
+          </div>
+        </nb-card-header>
+  
+        <nb-card-body class="card-no-padding">
+          <nb-list>
+            <nb-list-item *ngFor="let i of d.actividades">
+              <div class="form-group">
+                <label for="nombre" class="label">Nombre:</label>
+                <input [(ngModel)]="i ['nombre_' + idioma]" type="text" id="nombre" nbInput fullWidth>
+              </div>
+      
+              <div class="form-group">
+                <label for="descripcion" class="label">Detalle:</label>
+                <textarea [(ngModel)]="i ['detalle_' + idioma]" rows="5" nbInput fullWidth shape="rectangle" id="descripcion"></textarea>
+              </div>
+      
+              <button nbButton size="tiny" status="danger" (click)="eliminarActividad (i, d.actividades)">Borrar</button>
+            </nb-list-item>
+          </nb-list>
+        </nb-card-body>
+      </nb-card>
+
+      <div class="row">
+        <div class="col-6">
+          <button nbButton fullWidth status="danger" (click)="elimninar ()">Eliminar</button>
+        </div>
+  
+        <div class="col-6">
+          <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submit ()">Actualizar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

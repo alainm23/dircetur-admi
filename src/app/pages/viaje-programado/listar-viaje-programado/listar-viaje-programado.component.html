@@ -1,0 +1,77 @@
+<div class="row">
+  <!--div class="col-6">
+    <nb-card>
+      <ul class="list-group">
+        <div *ngFor="let item of items">
+          <li [className]="item_selected.id === item.id ? 'list-group-item active' : 'list-group-item'" (click)="select_item (item)">
+            <div class="row">
+              <div class="col-8 align-self-center">
+                {{ item.nombre }}
+              </div>
+
+              <div class="col-2 align-self-center">
+                <button nbButton fullWidth size="tiny" ghost (click)="eliminarItem (item)"><nb-icon icon="trash-outline"></nb-icon></button>
+              </div>
+
+              <div class="col-2 align-self-center">
+                  <button nbButton fullWidth size="tiny" ghost (click)="editarItem (item)"><nb-icon icon="edit-outline"></nb-icon></button>
+              </div>
+            </div>
+          </li>
+        </div>
+      </ul>
+      <!--nb-card-header>
+        Viaje programado
+      </nb-card-header>
+
+      <nb-card-body>
+        <!--div class="form-group">
+          <nb-select [(ngModel)]="item_selected" fullWidth id="title" (selectedChange)="select_changed ()">
+            <nb-option [value]="item">
+              
+            </nb-option>
+          </nb-select>
+        </div>
+        
+      </nb-card-body>
+      
+    </nb-card>
+  </div>
+  
+  <div class="col-6">
+    <nb-card>
+      <nb-card-header>
+        <div class="row">
+          <div class="col-9">
+            Salidas
+          </div>
+  
+          <div class="col-3">
+            <button nbButton size="tiny" fullWidth (click)="agregar_salida (dialog)">Agregar</button>
+          </div>
+        </div>
+      </nb-card-header>
+      <nb-list>
+        <nb-list-item *ngFor="let item of salidas">
+          <div class="row">
+            <div class="col-6 align-self-center" (click)="checklist (item)">
+              {{ getDateFormat (item.fecha_salida) }}
+            </div>
+            
+            <div class="col-2 align-self-center">
+              <button nbButton ghost status="danger" size="tiny" (click)="checklist (item)"><nb-icon icon="checkmark-square-2-outline"></nb-icon></button>
+            </div>
+
+            <div class="col-2 align-self-center">
+              <button nbButton ghost status="danger" size="tiny" (click)="eliminarSalida (item)"><nb-icon icon="trash-2-outline"></nb-icon></button>
+            </div>
+
+            <div class="col-2 align-self-center">
+              <button nbButton ghost status="danger" size="tiny" (click)="editarSalida (item)"><nb-icon icon="edit-outline"></nb-icon></button>
+            </div>
+          </div>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </div-->
+</div>

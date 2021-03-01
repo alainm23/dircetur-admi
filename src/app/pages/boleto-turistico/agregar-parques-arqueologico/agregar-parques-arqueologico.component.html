@@ -1,0 +1,78 @@
+<ng-template #agregar let-data let-ref="dialogRef">
+  <form [formGroup]="form">
+    <nb-card [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+      <nb-card-header>Registrar parque arqueologico</nb-card-header>
+      <nb-card-body>
+        <label for="imagen" class="label">Imagen:</label>
+        <div class="form-group">
+          <input type="file" nbInput id="imagen" accept="image/*" (change)="changeListener($event)" />
+        </div>  
+
+        <img *ngIf="image != ''" class="img" [src]="image">
+
+        <div class="form-group">
+          <label for="titulo" class="label">Titulo:</label>
+          <input type="text" formControlName="titulo" id="titulo" nbInput fullWidth>
+        </div>
+        
+        <div class="form-group">
+          <label for="detalle" class="label">Detalle:</label>
+          <textarea formControlName="detalle" rows="5" nbInput fullWidth shape="rectangle" id="detalle"></textarea>
+        </div>
+      </nb-card-body>
+
+      <nb-card-footer>
+        <div class="form-group" *ngIf="is_loading === true && has_image === true">
+          <label for="progress" class="label">Subiendo al servividor...</label>
+          <nb-progress-bar [value]="uploadPercent" id="progress"></nb-progress-bar>
+        </div>
+    
+        <div class="row">
+          <div class="col-6">
+            <button nbButton fullWidth status="danger" (click)="close_dialog (ref)">Cancelar</button>
+          </div>
+    
+          <div class="col-6">
+            <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submit ()">Crear</button>
+          </div>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </form>
+</ng-template>
+
+<div class="row">
+  <div class="col">
+    <nb-card>
+      <nb-card-header>
+        <div class="row">
+          <div class="col-9">
+            Parques arqueologicos
+          </div>
+          <div class="col-3">
+            <button nbButton size="tiny" fullWidth (click)="open_registrar (agregar)">Registrar</button>
+          </div>
+        </div>
+      </nb-card-header>
+
+      <nb-list>
+        <nb-list-item *ngFor="let item of items">
+          <div class="row">
+            <div class="col-8">
+              {{ item.titulo }}
+            </div>
+
+            <div class="col-2">
+              <button nbButton size="tiny" fullWidth status="danger" (click)="elimninar (item)">Eliminar</button>
+            </div>
+
+            <div class="col-2">
+              <button nbButton size="tiny" fullWidth (click)="editar (item, dialog)">Ver</button>
+            </div>
+          </div>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </div>
+</div>
+  

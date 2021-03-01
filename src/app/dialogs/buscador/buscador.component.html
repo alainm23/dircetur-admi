@@ -1,0 +1,19 @@
+<nb-card class="container">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-10">
+        <input nbInput type="text" fullWidth [(ngModel)]="search_term" (ngModelChange)="search_changed ()">
+      </div>
+
+      <div class="col-2 text-center" (click)="close ()">
+        X
+      </div>
+    </div>
+  </nb-card-header>
+  <nb-list>
+    <nb-list-item *ngFor="let item of items" (click)="ver_detalles (item)">
+      {{ item.nombre }}
+    </nb-list-item>
+    <!--nb-user  [name]="item.nombre_comercial" size="small" [title]="item.tipo"></nb-user-->
+  </nb-list>
+</nb-card>

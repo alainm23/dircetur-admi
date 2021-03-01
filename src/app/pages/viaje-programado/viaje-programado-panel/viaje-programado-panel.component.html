@@ -1,0 +1,278 @@
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+    <nb-card-header>Crear salida: {{ item_selected.nombre }}</nb-card-header>
+    <nb-card-body>
+      <form [formGroup]="form">
+        <div class="form-group">
+          <label for="fecha_salida" class="label">Fecha y hora:</label>
+          <input type="datetime-local" formControlName="fecha_salida" id="fecha_salida" nbInput fullWidth>
+        </div>
+
+        <div class="form-group">
+          <label for="fecha_limite" class="label">Fecha limite de inscripcion:</label>
+          <input type="datetime-local" formControlName="fecha_limite" id="fecha_limite" nbInput fullWidth>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="cupos" class="label">Cupos:</label>
+              <input type="number" formControlName="cupos" id="cupos" nbInput fullWidth>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="precio" class="label">Precio (S/.):</label>
+              <input type="number" formControlName="precio" id="precio" nbInput fullWidth>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="tipo_registro" class="label">Tipo registro:</label>
+          <nb-select formControlName="tipo_registro" fullWidth>
+            <nb-option value="0">Virtual</nb-option>
+            <nb-option value="1">Presencial</nb-option>
+          </nb-select>
+        </div>
+      </form>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="cerrar_dialog (ref)">Cancelar</button>
+      &nbsp;
+      <button nbButton (click)="crear_salida (ref)" [disabled]="!form.valid">Crear salida</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<ng-template #dialog_historial let-data let-ref="dialogRef">
+  <nb-card [nbSpinner]="viajeros_loading" nbSpinnerStatus="primary">
+    <nb-card-header class="header-class">
+      <div class="row">
+        <div class="col-10 align-self-center">
+            Lista de viajeros
+        </div>
+  
+        <div class="col-2 text-right align-self-center">
+          <span (click)="ref.close ()" class="close-button">X</span>
+        </div>
+      </div>
+    </nb-card-header>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">DNI</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Asistio</th>
+          </tr>
+        </thead>
+  
+        <tbody>
+          <tr *ngFor="let viajero of viajeros | orderBy: 'nombre' : true">
+            <td scope="row">{{ viajero.dni }}</td>
+    
+            <td>{{ viajero.nombre_completo }}</td>
+    
+            <td>
+              <nb-icon *ngIf="viajero.checked" status="success" icon="checkmark-circle-2-outline"></nb-icon>
+              <nb-icon *ngIf="!viajero.checked" status="danger" icon="close-circle-outline"></nb-icon>      
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  </nb-card>
+</ng-template>
+
+<nb-card *ngIf="view === 'panel'">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Viaje</th>
+        <th scope="col">Nro. salidas</th>
+        <th scope="col">Proxima salida</th>
+        <th scope="col">Inscritos</th>
+        <th scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items | orderBy: 'nro_salidas' : true">
+        <td scope="row">{{ item.nombre }}</td>
+
+        <td class="text-center">
+          <button (click)="ver_historial (item)" nbButton ghost>{{ item.nro_salidas }}</button>
+        </td>
+
+        <td>
+          <div *ngIf="item.estado <= 1">
+            {{ getDateFormat (item.ultimo_viaje_fecha_salida) }}
+          </div>
+
+          <div *ngIf="item.estado > 1">
+            --
+          </div>      
+        </td>
+
+        <td>
+          <div *ngIf="item.estado > 1">
+            <button nbButton status="success" size="tiny" (click)="agregar_salida (item, dialog)">Registrar salida</button>
+          </div>
+
+          <div *ngIf="item.estado <= 1">
+            {{ item.ultimo_viaje_nro_incritos }} de {{ item.ultimo_viaje_cupos }} inscritos
+            <br>
+            <span *ngIf="item.ultimo_viaje_nro_pendientes > 0">Cola: {{ item.ultimo_viaje_nro_pendientes }}</span>
+            <button class="text-transform-none" nbButton ghost status="primary" title="Ver inscritos" (click)="checklist (item)">
+              Ver >
+            </button>
+          </div>
+        </td>
+
+        <td *ngIf="item.estado <= 1">
+          <button nbButton ghost status="primary"
+            title="Editar salida"
+            [nbPopover]="templateRef" nbPopoverPlacement="bottom"
+            (click)="editar_datos (item)">
+            <nb-icon icon="edit"></nb-icon>
+          </button>
+          
+          <ng-template #templateRef>
+            <!-- Editar formato de al fecha-->
+            <nb-card [nbSpinner]="crud_loading" nbSpinnerStatus="primary">
+              <nb-card-header>
+                Editar salida
+              </nb-card-header>
+              <nb-card-body>
+                <form [formGroup]="form_edit">
+                  <div class="form-group">
+                    <label for="fecha_salida" class="label">Fecha y hora:</label>
+                    <input type="datetime-local" formControlName="fecha_salida" id="fecha_salida" nbInput fullWidth>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="fecha_limite" class="label">Fecha limite de inscripcion:</label>
+                    <input type="datetime-local" formControlName="fecha_limite" id="fecha_limite" nbInput fullWidth>
+                  </div>
+    
+                  <div class="form-group">
+                    <label for="cupos" class="label">Cupos:</label>
+                    <input type="number" formControlName="cupos" id="cupos" nbInput fullWidth>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="precio" class="label">Precio:</label>
+                    <input type="number" formControlName="precio" id="precio" nbInput fullWidth>
+                  </div>
+
+                  <div *ngIf="form_edit.controls.cupos.errors?.min">
+                    <p class="error-label">* El numero de cupos tiene que ser mayor o igual a {{ item.ultimo_viaje_cupos }}</p>
+                  </div>
+                </form>
+              </nb-card-body>
+
+              <nb-card-footer>
+                <button nbButton [disabled]="!form_edit.valid" (click)="actualizar_salida (item)">Actualizar</button>
+              </nb-card-footer>
+            </nb-card>
+          </ng-template>
+          <button nbButton ghost status="danger" title="Eliminar salida" (click)="eliminar_salida (item)"><nb-icon icon="trash"></nb-icon></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</nb-card>
+
+<nb-card *ngIf="view === 'historial'">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-3 align-self-center">
+        <button class="text-transform-none" ghost nbButton (click)="ir_vista ('panel')">< Regresar</button>
+      </div>
+      <div class="col-9 align-self-center">
+        Historial de salidas: {{ item_selected.nombre }}
+      </div>
+    </div>
+  </nb-card-header>
+  <table class="table" [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+    <thead>
+      <tr>
+        <th scope="col">Salidas</th>
+        <th scope="col">Cupos</th>
+        <th scope="col">Nro° viajeros</th>
+        <th scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of historial | orderBy: 'fecha_salida' : true">
+        <td>{{ getDateFormat (item.fecha_salida) }} <span *ngIf="item.eliminado === true" class="badge badge-danger margin-left">Eliminado</span></td>
+        <td>{{ item.cupos }}</td>
+        <td>{{ item.nro_inscritos }}</td>
+        <td><button class="text-transform-none" ghost nbButton size="tiny" (click)="ver_pasajeros (item, dialog_historial)">Ver viajeros ></button></td>
+      </tr>
+    </tbody>
+  </table>
+</nb-card>
+
+<nb-card *ngIf="view === 'checklist'">
+  <nb-card-header>
+    <div class="row">
+      <div class="col-3 align-self-center">
+        <button class="text-transform-none" ghost nbButton (click)="ir_vista ('panel')">< Regresar</button>
+      </div>
+      <div class="col-6 align-self-center">
+        Registro de viajeros: {{ item_selected.nombre }}
+      </div>
+
+      <div class="col-3 align-self-center">
+        <button fullWidth status="success"z nbButton (click)="agregarViajero ()">Registrar</button>
+      </div>
+    </div>
+  </nb-card-header>
+  <table class="table" [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+    <thead>
+      <tr>
+        <th scope="col">DNI</th>
+        <th scope="col">Nombre completo</th>
+        <th scope="col">Telefono</th>
+        <th scope="col">Asistio</th>
+        <th scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of viajeros_checklist">
+        <td scope="row">
+          {{ item.dni }}
+        </td>
+
+        <td>
+          {{ item.nombre_completo }}
+          <span *ngIf="item.esta_cola === true" class="badge badge-primary margin-left">En cola</span>
+        </td>
+
+        <td>{{ item.telefono }}</td>
+        
+        <td>
+          <nb-toggle [disabled]="item.esta_cola === true" (checkedChange)="checkChanged ($event ,item)"  [checked]="item.checked"></nb-toggle>
+        </td>
+
+        <td>
+          <button size="tiny" status="danger" ghost nbButton (click)="eliminar_viajero (item)"><nb-icon icon="close"></nb-icon></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <nb-card-footer>
+    <div class="row">
+      <div class="col-8">
+
+      </div>
+
+      <div class="col-4">
+        <button fullWidth size="tiny" status="danger" nbButton (click)="cerrar_viaje ()" *ngIf="item_selected.ultimo_viaje_nro_incritos > 0">
+          Procesar viaje
+        </button>
+      </div>
+    </div>
+  </nb-card-footer>
+</nb-card>

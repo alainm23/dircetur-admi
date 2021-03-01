@@ -1,0 +1,131 @@
+<div class="row" [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+  <div class="col">
+    <form [formGroup]="form">
+      <nb-card>
+        <nb-card-header>Informacion</nb-card-header>
+        <nb-card-body>
+          <div class="form-group">
+            <label for="nombre" class="label">Nombre:</label>
+            <input type="text" formControlName="nombre_es" id="nombre" nbInput fullWidth>
+          </div>
+
+          <div class="form-group">
+            <label for="descripcion" class="label">Descripcion:</label>
+            <textarea formControlName="descripcion_es" rows="5" nbInput fullWidth shape="rectangle" id="descripcion"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="donde" class="label">Donde:</label>
+            <input type="text" formControlName="donde_es" id="donde" nbInput fullWidth>
+          </div>
+
+          <div class="form-group">
+            <label for="altitud" class="label">Altitud:</label>
+            <input type="text" formControlName="altitud_es" id="altitud" nbInput fullWidth>
+          </div>
+
+          <div class="form-group">
+            <label for="itinerario" class="label">Itinerario:</label>
+            <textarea formControlName="itinerario_es" rows="10" nbInput fullWidth shape="rectangle" id="itinerario"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="incluye" class="label">Incluye:</label>
+            <textarea formControlName="incluye_es" rows="5" nbInput fullWidth shape="rectangle" id="incluye"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="distancia" class="label">Distancia:</label>
+            <textarea formControlName="distancia_es" rows="5" nbInput fullWidth shape="rectangle" id="distancia"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="informes_reserva" class="label">Informes y reservas:</label>
+            <textarea formControlName="informes_reserva_es" rows="5" nbInput fullWidth shape="rectangle" id="informes_reserva"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="telefono" class="label">Telefono:</label>
+            <input type="text" formControlName="telefono" id="telefono" nbInput fullWidth>
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="label">E-mail:</label>
+            <input type="text" formControlName="email" id="email" nbInput fullWidth>
+          </div>
+
+          <div class="form-group">
+            <label for="pagina_web" class="label">Pagina Web:</label>
+            <input type="text" formControlName="pagina_web" id="pagina_web" nbInput fullWidth>
+          </div>
+
+          <div class="form-group">
+            <label for="tags" class="label">Tags:</label>
+            <input type="text" id="tags" nbInput fullWidth placeholder="Aventura" (keyup.enter)="agregar_tag ($event)">
+          </div>
+
+          <div class="form-group" style="display: flex;">
+            <div *ngFor="let item of tags" style="display: flex;">
+              <span style="margin: 0px 6px 0px 0px;" class="badge badge-light">
+                {{ item.nombre }}
+              </span>
+
+              <span style="margin: 0px 6px 0px 0px; border-radius: 50%;" class="badge badge-danger" (click)="eliminar_tag (item)">
+                x
+              </span>
+            </div>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </form>
+
+    <nb-card>
+      <nb-card-header>
+        <div class="row">
+          <div class="col-9">
+            Imagenes (Recomendados: 900px x 375px)
+          </div>
+  
+          <div class="col-3">
+            <div>
+              <button fullWidth nbButton size="tiny" (click)="fileInput.click ()">Subir imagen</button>
+              <input hidden multiple type="file" accept="image/*" #fileInput (change)="changeListener($event)">
+            </div>
+          </div>
+        </div>
+      </nb-card-header>
+      <nb-card-body>
+        <nb-list>
+          <nb-list-item *ngFor="let item of files">
+            <div class="row">
+              <div class="col-3 align-self-center">
+                <img class="img-preview" [src]="item.image">
+              </div>
+              
+              <div class="col-6">
+                <div class="form-group" *ngIf="item.uploadPercent !== 0">
+                  <label for="progress" class="label">Subiendo al servividor...</label>
+                  <nb-progress-bar [value]="item.uploadPercent" id="progress"></nb-progress-bar>
+                </div>
+              </div>
+              
+              <div class="col-3 align-self-center">
+                <button nbButton size="tiny" fullWidth status="danger" (click)="eliminarImagen (item)">Eliminar</button>
+              </div>
+            </div>
+          </nb-list-item>
+        </nb-list>
+      </nb-card-body>
+    </nb-card>
+    
+    <div class="row">
+      <div class="col-6">
+        <button nbButton fullWidth status="danger">Cancelar</button>
+      </div>
+
+      <div class="col-6">
+        <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submit ()">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>

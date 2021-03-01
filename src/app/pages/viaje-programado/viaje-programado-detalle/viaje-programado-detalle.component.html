@@ -1,0 +1,171 @@
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card [nbSpinner]="is_upload" nbSpinnerStatus="primary">
+    <nb-card-header>Subir imagen</nb-card-header>
+    <nb-card-body>
+      <img class="imagen_preview" [src]="imagen_preview">
+    </nb-card-body>
+
+    <nb-card-footer *ngIf="uploadPercent !== 0">
+      <div class="form-group">
+        <nb-progress-bar [value]="uploadPercent" id="progress"></nb-progress-bar>
+      </div>
+    </nb-card-footer>
+    
+    <nb-card-footer>
+      <div class="row">
+        <div class="col-6">
+          <button nbButton fullWidth status="danger" (click)="ref.close()">Cancelar</button>
+        </div>
+  
+        <div class="col-6">
+          <button nbButton fullWidth status="primary" (click)="subir (ref)">Subir</button>
+        </div>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<div class="row" [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+  <div class="col-lg-6">
+    <form [formGroup]="form">
+      <nb-card>
+        <nb-card-header>Informacion</nb-card-header>
+        <nb-card-body>
+          <div class="form-group">
+            <label for="nombre" class="label">Nombre:</label>
+            <input type="text" formControlName="nombre" id="nombre" nbInput fullWidth>
+          </div>
+
+          <div class="form-group">
+            <label for="descripcion" class="label">Descripcion:</label>
+            <textarea formControlName="descripcion" rows="5" nbInput fullWidth shape="rectangle" id="descripcion"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="donde" class="label">Donde:</label>
+            <input type="text" formControlName="donde" id="donde" nbInput fullWidth>
+          </div>
+
+          <div class="form-group">
+            <label for="altitud" class="label">Altitud:</label>
+            <input type="text" formControlName="altitud" id="altitud" nbInput fullWidth>
+          </div>
+
+          <div class="form-group">
+            <label for="incluye" class="label">Incluye:</label>
+            <textarea formControlName="incluye" rows="5" nbInput fullWidth shape="rectangle" id="incluye"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="no_incluye" class="label">No Incluye:</label>
+            <textarea formControlName="no_incluye" rows="5" nbInput fullWidth shape="rectangle" id="no_incluye"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="prpoteccion_turista" class="label">Proteccion para el turista:</label>
+            <textarea formControlName="prpoteccion_turista" rows="5" nbInput fullWidth shape="rectangle" id="no_incluye"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="dificultad_ruta" class="label">Dificultad de ruta:</label>
+            <textarea formControlName="dificultad_ruta" rows="5" nbInput fullWidth shape="rectangle" id="no_incluye"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="restricciones_requisitos" class="label">Restriccion y requisitos:</label>
+            <textarea formControlName="restricciones_requisitos" rows="5" nbInput fullWidth shape="rectangle" id="no_incluye"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="importante" class="label">Importante:</label>
+            <textarea formControlName="importante" rows="5" nbInput fullWidth shape="rectangle" id="no_incluye"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="itinerario" class="label">Itinerario:</label>
+            <textarea formControlName="itinerario" rows="10" nbInput fullWidth shape="rectangle" id="no_incluye"></textarea>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </form>
+
+    <nb-card>
+      <nb-card-header>
+        <div class="row">
+          <div class="col-9">
+            Imagenes (Recomendados: Alto: 600px Ancho 600px)
+          </div>
+  
+          <div class="col-3">
+            <div>
+              <button fullWidth nbButton size="tiny" (click)="fileInput.click ()">Subir imagen</button>
+              <input hidden type="file" accept="image/*" #fileInput (change)="changeListener ($event, dialog)">
+            </div>
+          </div>
+        </div>
+      </nb-card-header>
+
+      <nb-card-body>
+        <nb-list>
+          <nb-list-item *ngFor="let item of imagenes">
+            <div class="row">
+              <div class="col-3 align-self-center">
+                <img class="img-preview" [src]="item.url">
+              </div>
+              
+              <div class="col-6">
+
+              </div>
+              
+              <div class="col-3 align-self-center">
+                <button nbButton size="tiny" fullWidth status="danger" (click)="eliminarImagen (item)">Eliminar</button>
+              </div>
+            </div>
+          </nb-list-item>
+        </nb-list>
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+  <div class="col-lg-6">
+    <nb-card>
+      <nb-card-header>
+        <div class="row">
+          <div class="col-9">
+            Preguntas frecuentes
+          </div>
+  
+          <div class="col-3">
+            <button nbButton size="tiny" (click)="agregarPregunta ()">Agregar</button>
+          </div>
+        </div>
+      </nb-card-header>
+    </nb-card>
+    
+    <nb-card *ngFor="let p of preguntas">
+      <nb-card-body>
+        <div class="form-group">
+          <label for="pregunta" class="label">Pregunta:</label>
+          <input type="text" id="pregunta" nbInput fullWidth [(ngModel)]="p.pregunta">
+        </div>
+
+        <div class="form-group">
+          <label for="respuesta" class="label">Respuesta:</label>
+          <textarea [(ngModel)]="p.respuesta" rows="4" nbInput fullWidth shape="rectangle" id="respuesta"></textarea>
+        </div>
+
+        <button nbButton size="small" status="danger"  (click)="eliminarPregunta (p)">Eliminar</button>
+      </nb-card-body>
+    </nb-card>
+
+    <div class="row">
+      <div class="col-6">
+        <button nbButton fullWidth status="danger">Cancelar</button>
+      </div>
+
+      <div class="col-6">
+        <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submit ()">Actualizado</button>
+      </div>
+    </div>
+  </div>
+</div>

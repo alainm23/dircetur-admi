@@ -1,0 +1,103 @@
+<div class="row">
+  <div class="col-12">
+    <nb-card [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+      <nb-card-header>
+        <div class="row">
+          <div class="col-9">
+              <div class="form-group" [formGroup]="form_dni">
+                  <input type="number" id="pregunta" nbInput fullWidth formControlName="dni" placeholder="Ingrese el DNI">
+              </div>
+          </div>
+
+          <div class="col-3">
+            <button nbButton fullWidth (click)="buscar ()" [disabled]="!form_dni.valid">Buscar</button>
+          </div>
+        </div>
+      </nb-card-header>
+    </nb-card>
+  </div>
+
+  <div class="col-6" was_found>
+    <nb-card *ngIf="was_found">
+      <nb-card-header>Datos viajero</nb-card-header>
+      <nb-card-body>
+        <span class="h6">Nombre completo:</span>
+        <span class="block">{{ usuario?.nombre_completo }}</span>
+        <br>
+        <span class="h6">Correo electronico:</span>
+        <span class="block">{{ usuario?.correo }}</span>
+        <br>
+        <span class="h6">Telefono:</span>
+        <span class="block">{{ usuario?.telefono }}</span>
+        <br>
+        <span class="h6">Fecha de nacimiento:</span>
+        <span class="block">{{ getDateFormat (usuario?.fecha_nacimiento) }}</span>
+        <br>
+        <span class="h6">Estado:</span>
+        <span *ngIf="usuario?.estado === true" class="margin-left badge badge-success" (click)="habilitado_changed ()">
+          Habilitado
+        </span>
+        <span *ngIf="usuario?.estado === false" class="margin-left badge badge-danger" (click)="habilitado_changed ()">
+          Sancionado
+        </span>
+        <!--form [formGroup]="form">
+          <div class="form-group">
+            <label for="nombre_completo" class="label">Nombre completo:</label>
+            <input type="text" formControlName="nombre_completo" nbInput fullWidth id="nombre_completo">
+          </div>
+    
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="correo" class="label">Correo:</label>
+                <input type="email" formControlName="correo" nbInput fullWidth id="correo">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="telefono" class="label">Telefono:</label>
+                <input type="text" formControlName="telefono" nbInput fullWidth id="telefono">
+              </div>
+            </div>
+          </div>
+    
+          <div class="form-group">
+            <label for="fecha_nacimiento" class="label">Fecha de nacimiento:</label>
+            <input nbInput 
+              formControlName="fecha_nacimiento"
+              fullWidth
+              id="fecha_nacimiento"
+              [nbDatepicker]="date">
+            <nb-datepicker #date></nb-datepicker>
+          </div>
+        </form-->
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+  <div class="col-6">
+    <nb-card *ngIf="was_found" [nbSpinner]="is_list_loading" nbSpinnerStatus="primary">
+      <table class="table table-striped" [nbSpinner]="changed_loading" nbSpinnerStatus="primary">
+        <thead>
+          <tr>
+            <th scope="col">Viaje</th>
+            <th scope="col">Salidas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td scope="row">{{ item.data.nombre }}</td>
+    
+            <td>
+              <div *ngFor="let salida of item.salidas">
+                {{ getDateFormat (salida) }}
+                <nb-icon *ngIf="salida.checked" status="success" icon="checkmark-circle-2-outline"></nb-icon>
+                <nb-icon *ngIf="!salida.checked" status="danger" icon="close-circle-outline"></nb-icon>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </nb-card>
+  </div>
+</div>

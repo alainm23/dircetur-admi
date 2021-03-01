@@ -1,0 +1,62 @@
+
+<nb-card>
+  <nb-card-header class="header-class">
+    <div class="row">
+      <div class="col-10 align-self-center" style="color: white;">
+          Detalle de la Solicitud
+      </div>
+      <div class="col-2 align-self-center">
+        <nb-icon class="close-button" icon="close" (click)="close ()" style="color: white; cursor: pointer;"></nb-icon>
+      </div>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <div class="col-6">
+      <div *ngIf="estado_natural">
+        <label for="nombre_completo" class="label"><strong>Nombres y Apellidos: </strong>{{detalle?.nombre_completo}}</label>
+        <br>
+        <label for="n_doc" class="label"><strong>Dni: </strong>{{detalle?.n_doc}}</label>
+        <br>
+      </div>
+      <div *ngIf="estado_juridico">
+        <label for="razon_social" class="label"><strong>Razón Social: </strong>{{solicitante?.razon_social}}</label>
+        <br>
+        <label for="nombre_comercial" class="label"><strong>Nombre Comercial: </strong>{{detalle?.nombre_comercial}}</label>
+        <br>
+        <label for="n_doc" class="label"><strong>Ruc: </strong>{{detalle?.n_doc}}</label>
+      </div>
+      <label class="label"><strong>Correo: </strong>{{solicitante?.correo}}</label>
+      <br>
+      <label class="label"><strong>Teléfono: </strong>{{solicitante?.telefono}}</label>
+      <br>
+      <label for="provincia" class="label"><strong>Provincia: </strong>{{detalle?.provincia.nombre}}</label>
+      <br>
+      <label for="distrito" class="label"><strong>Distrito: </strong>{{detalle?.distrito.nombre}}</label>
+      <br>
+      <label for="asunto" class="label"><strong>Asunto: </strong>{{detalle?.asunto.nombre}}</label>
+      <br>
+      <div *ngIf="estado_capacitacion">
+        <label for="capacitacion" class="label"><strong>Tipo de Capacitación: </strong>{{detalle?.capacitacion.nombre}}</label>
+        <br>
+      </div>
+      <label class="label"><strong>Descripción: </strong>{{informacion_detalle?.descripcion}}</label>
+      <br>
+      <label class="label"><strong>Estado: </strong>{{estado_solicitud}}</label>
+      <br>
+      <label class="label"><strong>Fecha de la Solicitud: </strong>{{formatFecha(detalle?.fecha_solicitud)}}</label>
+      </div>
+      <div class="col-6" *ngIf="estado_juridico">
+        <h4>Datos de Contacto</h4>
+        <label class="label"><strong>Nombre Completo: </strong>{{informacion_detalle?.nombre_completo_contacto}}</label>
+        <br>
+        <label class="label"><strong>Dni: </strong>{{informacion_detalle?.dni_contacto}}</label>
+        <br>
+        <label class="label"><strong>Correo: </strong>{{informacion_detalle?.correo_contacto}}</label>
+        <br>
+        <label class="label"><strong>Teléfono: </strong>{{informacion_detalle?.telefono_contacto}}</label>
+      </div>
+    </div>
+    
+  </nb-card-body>
+</nb-card>

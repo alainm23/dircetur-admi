@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col">
+    <nb-card>
+      <nb-card-header>
+        <div style="color: white;">
+          Actualizar Información del Beneficiario <br>
+          Los campos con (*) son requeridos.
+        </div>
+      </nb-card-header>
+      <nb-card-body>
+        <form [formGroup]="form">
+          <div *ngIf="estado_natural">
+            <div class="form-group">
+              <label for="nombre_completo" class="label">Nombres y Apellidos: *</label>
+              <input type="text" formControlName="nombre_completo" id="nombre_completo" nbInput fullWidth>
+            </div>
+          </div>
+          <div *ngIf="estado_juridico">
+            <div class="form-group">
+              <label for="razon_social" class="label">Razón Social: *</label>
+              <input type="text" formControlName="razon_social" id="razon_social" nbInput fullWidth>
+            </div>
+            <div class="form-group">
+              <label for="nombre_comercial" class="label">Nombre Comercial: *</label>
+              <input type="text" formControlName="nombre_comercial" id="nombre_comercial" nbInput fullWidth>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="telefono" class="label">Telefono: *</label>
+            <input type="number" formControlName="telefono" id="telefono" nbInput fullWidth>
+          </div>
+          <div class="form-group">
+            <label for="correo" class="label">Correo: *</label>
+            <input type="email" formControlName="correo" id="correo" nbInput fullWidth>
+          </div>
+          <div class="form-group">
+            <label for="direccion_completa" class="label">Dirección: *</label>
+            <input type="text" formControlName="direccion_completa" id="direccion_completa" placeholder="Ingresar Dirección Completa" nbInput fullWidth>      
+          </div>
+        </form>
+      </nb-card-body>
+      <nb-card-footer>
+        <div class="row">
+          <div class="col-6">
+            <button ghost nbButton fullWidth status="danger" (click)="close ()">Cerrar</button>
+          </div>
+          <div class="col-6">
+            <button nbButton fullWidth status="success" [disabled]="!form.valid" (click)="submit ()">Actualizar</button>
+          </div>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </div>
+</div>
+  

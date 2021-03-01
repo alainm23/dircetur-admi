@@ -1,0 +1,329 @@
+<nb-card>
+  <nb-card-body>
+    <nb-stepper #stepper orientation="horizontal" [linear]="linearMode">
+      <nb-step [label]="labelOne">
+        <ng-template #labelOne>Beneficiario</ng-template>
+        <div *ngIf="validar_solicitante">
+          <h4>Validar Beneficiario</h4>
+          <form [formGroup]="form">
+            <div class="form-group">
+              <label for="n_doc" class="label">Ingresar Dni o Ruc: *</label>
+              <input type="number" formControlName="n_doc" id="n_doc" nbInput fullWidth>
+            </div>
+          </form>
+            <div class="col-6">
+              <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submitValidar ()">Validar</button>
+            </div>
+        </div>
+        <div *ngIf="no_existe_solicitante">
+          <div class="row">
+            <div class="col">
+              <nb-card>
+                <nb-card-header>
+                  Agregar Beneficiario <br>
+                  Los campos con (*) son requeridos.
+                </nb-card-header>
+                <nb-card-body>
+                  <form [formGroup]="form2">
+                    <div class="form-group">
+                      <label class="label">Seleccionar Tipo de Persona: *</label>
+                      <nb-select fullWidth formControlName="tipo" placeholder="Juridica" [(selected)]="selectedItemTipo">
+                        <nb-option (click)="tipoPersona ('juridica')" value="Juridica">
+                          Juridica
+                        </nb-option>
+                        <nb-option (click)="tipoPersona ('natural')" value="Natural">
+                          Natural
+                        </nb-option>
+                      </nb-select>
+                    </div>
+                    <div *ngIf="estado_natural">
+                      <div class="form-group">
+                        <label for="nombre_completo" class="label">Nombres y Apellidos: *</label>
+                        <input type="text" formControlName="nombre_completo" id="nombre_completo" nbInput fullWidth>
+                      </div>
+                      <div class="form-group">
+                        <label for="n_doc" class="label">Ingresar Dni: *</label>
+                        <input type="number" formControlName="n_doc" id="n_doc" nbInput fullWidth disabled>
+                      </div>
+                    </div>
+                    <div *ngIf="estado_juridico">
+                      <div class="form-group">
+                        <label for="razon_social" class="label">Razón Social: *</label>
+                        <input type="text" formControlName="razon_social" id="razon_social" nbInput fullWidth>
+                      </div>
+                      <div class="form-group">
+                        <label for="nombre_comercial" class="label">Nombre Comercial: *</label>
+                        <input type="text" formControlName="nombre_comercial" id="nombre_comercial" nbInput fullWidth>
+                      </div>
+                      <div class="form-group">
+                        <label for="n_doc" class="label">Ingresar Ruc: *</label>
+                        <input type="number" formControlName="n_doc" id="n_doc" nbInput fullWidth disabled>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="telefono" class="label">Telefono: *</label>
+                      <input type="number" formControlName="telefono" id="telefono" nbInput fullWidth>
+                    </div>
+                    <div class="form-group">
+                      <label for="correo" class="label">Correo: *</label>
+                      <input type="email" formControlName="correo" id="correo" nbInput fullWidth>
+                    </div>
+                    <div class="form-group"> 
+                      <label for="provincia" class="label">Provincia: *</label>
+                      <select class="select-css"
+                        formControlName="provincia" 
+                        (ngModelChange)="provinciaChanged ($event)"
+                        fullWidth 
+                        id="provincia"
+                        [compareWith]="compareWith">
+                        <option *ngFor="let item of provincias" [ngValue]="item">
+                          {{ item.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="distrito" class="label">Distrito: *</label>
+                      <select class="select-css" fullWidth formControlName="distrito" id="distrito" [compareWith]="compareWith">
+                        <option *ngFor="let item of distritos" [ngValue]="item">
+                          {{ item.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="direccion_completa" class="label">Dirección: *</label>
+                      <input type="text" formControlName="direccion_completa" id="direccion_completa" placeholder="Ingresar Dirección Completa" nbInput fullWidth>
+                    </div>
+                  </form>
+                </nb-card-body>
+              </nb-card>
+              <div class="row">
+                <div class="col-6">
+                  <button nbButton fullWidth status="danger" (click)="formValidarDni ()">Regresar</button>
+                </div>
+                <div class="col-6">
+                  <button nbButton fullWidth status="primary" [disabled]="!form2.valid" (click)="submitadd ()">Registrar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="existe_solicitante">
+          <div class="row">
+            <div class="col">
+              <nb-card>
+                <nb-card-header>
+                  Datos del Beneficiario
+                </nb-card-header>
+                <nb-card-body>
+                  <div *ngIf="estado_natural">
+                    <div class="form-group">
+                      <label for="nombre" class="label">
+                        Nombres y Apellidos: {{info_solicitante?.nombre_completo}}<br>
+                        Dni: {{info_solicitante?.n_doc}}<br>
+                        Provincia: {{info_solicitante?.provincia.nombre}}<br>
+                        Distrito: {{info_solicitante?.distrito.nombre}}</label>
+                    </div>                    
+                  </div>
+                  <div *ngIf="estado_juridico">
+                    <div class="form-group">
+                      <label for="nombre_comercial" class="label">
+                        Nombre Comercial: {{info_solicitante?.nombre_comercial}}<br>
+                        Ruc: {{info_solicitante?.n_doc}}<br>
+                        Provincia: {{info_solicitante?.provincia.nombre}}<br>
+                        Distrito: {{info_solicitante?.distrito.nombre}}</label>
+                    </div>
+                  </div>
+                  
+                  <div class="col-2">
+                    <button nbButton size="tiny" fullWidth (click)="editarBeneficiario (info_solicitante)">Editar</button>
+                  </div>
+                  
+                </nb-card-body>
+              </nb-card>
+            </div>
+          </div>
+        </div>
+        <br>
+        
+        <!--div *ngIf="primer_step==0">
+          <button nbButton (click)="formValidarDni ()">Regresar</button>
+          &nbsp;&nbsp;&nbsp;
+          <button nbButton disabled nbStepperNext>Siguiente</button>
+        </div-->
+        <!--div *ngIf="primer_step==1">
+          <button nbButton (click)="formValidarDni ()">Regresar</button>
+          &nbsp;&nbsp;&nbsp;
+          <button nbButton nbStepperNext (click)="habilitarSolicitud ()">Siguiente</button>
+        </div-->
+        
+      </nb-step>
+      <nb-step [label]="labelTwo">
+        <ng-template #labelTwo>Solicitud</ng-template>
+        <div *ngIf="existe_solicitante">
+          <div class="row">
+            <div class="col">
+              <nb-card>
+                <nb-card-header>
+                  Datos del Beneficiario
+                </nb-card-header>
+                <nb-card-body>
+                  <div *ngIf="estado_natural">
+                    <div class="form-group">
+                      <label for="nombre" class="label">
+                        Nombres y Apellidos: {{info_solicitante?.nombre_completo}}<br>
+                        Dni: {{info_solicitante?.n_doc}}<br>
+                        Provincia: {{info_solicitante?.provincia.nombre}}<br>
+                        Distrito: {{info_solicitante?.distrito.nombre}}</label>
+                    </div>                    
+                  </div>
+                  <div *ngIf="estado_juridico">
+                    <div class="form-group">
+                      <label for="nombre_comercial" class="label">
+                        Nombre Comercial: {{info_solicitante?.nombre_comercial}}<br>
+                        Ruc: {{info_solicitante?.n_doc}}<br>
+                        Provincia: {{info_solicitante?.provincia.nombre}}<br>
+                        Distrito: {{info_solicitante?.distrito.nombre}}</label>
+                    </div>
+                  </div>
+                  <div class="col-2">
+                    <button nbButton size="tiny" fullWidth (click)="editarBeneficiario (info_solicitante)">Editar</button>
+                  </div>
+                </nb-card-body>
+              </nb-card>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="segundo_step_disponible">
+          <div class="row">
+            <div class="col">
+              <nb-card>
+                <nb-card-header>
+                  Registrar Solicitud <br>
+                  Los campos con (*) son requeridos.
+                </nb-card-header>
+                <nb-card-body>
+                  <form [formGroup]="form4">
+                    <div class="form-group"> 
+                      <label for="asunto" class="label">Asunto: *</label>
+                      <select class="select-css" formControlName="asunto" fullWidth #tipo (change)="saberCap ()" id="asunto">
+                        <option value="">Seleccionar Asunto</option>
+                        <option *ngFor="let item of asuntos" [ngValue]="item">
+                          {{ item.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                    <div *ngIf="estado_select_capacitacion">
+                      <div class="form-group"> 
+                        <label for="capacitacion" class="label">Tipo de Capacitación: *</label>
+                        <select class="select-css" formControlName="capacitacion" fullWidth id="capacitacion">
+                          <option *ngFor="let item of capacitaciones" [ngValue]="item">
+                            {{ item.nombre }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="descripcion" class="label">Descripción: </label>
+                      <textarea formControlName="descripcion" rows="5" nbInput fullWidth shape="rectangle" id="descripcion" placeholder="Ingresar Descripción"></textarea>
+                    </div>
+                  </form>
+                </nb-card-body>
+              </nb-card>
+
+              <nb-card *ngIf="ultimo_step_disponible">
+                <nb-card-header>
+                  Información de contacto de la Persona que Presenta la Solicitud
+                  <br>
+                  Los Campos con (*) son requeridos.
+                </nb-card-header>
+                <!-- Formulario 5 -->
+                <nb-card-body>
+                  <form [formGroup]="form5">
+                    <div class="form-group">
+                      <label for="nombre_completo_contacto" class="label">Nombre Completo: *</label>
+                      <input type="text" formControlName="nombre_completo_contacto" id="nombre_completo_contacto" nbInput fullWidth>
+                    </div>
+                    <div class="form-group">
+                      <label for="correo_contacto" class="label">Correo: *</label>
+                      <input type="email" formControlName="correo_contacto" id="correo_contacto" nbInput fullWidth>
+                    </div>
+                    <div class="form-group">
+                      <label for="telefono_contacto" class="label">Telefono: *</label>
+                      <input type="number" formControlName="telefono_contacto" id="telefono_contacto" nbInput fullWidth>
+                    </div>
+                    <div class="form-group">
+                      <label for="dni_contacto" class="label">Dni: *</label>
+                      <input type="number" formControlName="dni_contacto" id="dni_contacto" nbInput fullWidth>
+                    </div>
+                  </form>
+                  <br>
+                  <!--div class="row">
+                    <div class="col-6">
+                      <button nbButton fullWidth status="primary" [disabled]="!form5.valid" (click)="submitaddContacto ()">Guardar</button>
+                    </div>
+                  </div-->
+                </nb-card-body>
+              </nb-card>
+
+              <div *ngIf="ultimo_step_disponible">
+                  <div class="row">
+                    <div class="col-6">
+                      <button nbButton fullWidth status="danger" nbStepperPrevious (click)="formValidarDni ()">Regresar</button>
+                    </div>
+                    <div class="col-6">
+                      <button nbButton fullWidth status="primary" [disabled]="!form4.valid && !form5.valid" (click)="submitaddSolicitud (2)">Registrar</button>
+                    </div>
+                  </div>
+              </div>
+
+              <div *ngIf="finalizar_step_natural_disponible">
+                <div class="row">
+                  <div class="col-6">
+                    <button nbButton fullWidth status="danger" nbStepperPrevious (click)="formValidarDni ()">Regresar</button>
+                  </div>
+                  <div class="col-6">
+                    <button nbButton fullWidth status="primary" [disabled]="!form4.valid" (click)="submitaddSolicitud (1)">Registrar</button>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <br>
+        <!--div *ngIf="segundo_step==0">
+          <button nbButton nbStepperPrevious (click)="formValidarDni ()">Regresar</button>
+          &nbsp;&nbsp;&nbsp;
+          <button nbButton disabled nbStepperNext>Siguiente</button>
+        </div>
+        <div *ngIf="segundo_step==1">
+          <div *ngIf="info_solicitante.tipo=='Natural'">
+            <button nbButton nbStepperPrevious (click)="formValidarDni ()">Regresar</button>
+            &nbsp;&nbsp;&nbsp;
+            <button nbButton nbStepperNext (click)="finalizarSolicitud ()">Finalizar</button>
+          </div>
+          <div *ngIf="info_solicitante.tipo=='Juridica'">
+            <button nbButton nbStepperPrevious (click)="formValidarDni ()">Regresar</button>
+            &nbsp;&nbsp;&nbsp;
+            <button nbButton nbStepperNext>Siguiente</button>
+          </div>
+        </div-->
+      </nb-step>
+
+      <nb-step [label]="labelNatu">
+        <ng-template #labelNatu>Finalizar</ng-template>
+        <h4>Solicitud procesada</h4>
+        <p>
+          Su solicitud ha sido registrada con éxito.
+        </p>
+
+        <!--button nbButton nbStepperPrevious>Regresar</button-->
+        <button nbButton (click)="irAddSolicitud ()">Registrar otra solicitud</button>
+        &nbsp;&nbsp;&nbsp;
+        <button nbButton (click)="finalizarSolicitud ()">Solicitudes pendientes</button>
+      </nb-step>
+
+     
+    </nb-stepper>
+  </nb-card-body>
+</nb-card>

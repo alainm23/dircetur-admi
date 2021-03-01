@@ -1,0 +1,143 @@
+<ng-template #dialog_alert let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Cerrar viaje</nb-card-header>
+    <nb-card-body>
+      <p>{{ data }}</p>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="ref.close()">Cancelar</button>
+      &nbsp;&nbsp;
+      <button nbButton status="danger" (click)="cerrar_viaje_yes ()">Aceptar</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Confirmar</nb-card-header>
+    <nb-card-body>
+      <p>{{ data }}</p>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="close_alert_dialog (ref)">Cancelar</button>
+      &nbsp;&nbsp;
+      <button nbButton status="danger" (click)="agregar_de_todas_formas (ref)">Aceptar</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
+
+<nb-card class="list-card">
+  <nb-card-header class="header-class">
+    <div class="row">
+      <div class="col-10 align-self-center">
+        Registro: {{ viaje?.nombre }}
+      </div>
+
+      <div class="col-2 align-self-center">
+        <span (click)="close ()" class="close-button">X</span>
+      </div>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div *ngIf="permiso === false">
+      <div class="row" [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+        <div class="col-12">
+          <div class="form-group" [formGroup]="form_dni">
+            <input type="number" id="pregunta" nbInput fullWidth formControlName="dni" placeholder="Ingrese el DNI">
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="row">
+            <div class="col-4">
+
+            </div>
+            <div class="col-4">
+              <!--button nbButton fullWidth status="success" size="tiny" (click)="verificar (dialog)" [disabled]="!form_dni.valid"><nb-icon icon="checkmark-circle-2-outline"></nb-icon></button-->
+            </div>
+  
+            <div class="col-4">
+              <button size="tiny" status="success" fullWidth nbButton (click)="verificar (dialog)" [disabled]="!form_dni.valid">
+                Registrar
+              </button>
+              <!--button nbButton fullWidth status="danger" size="tiny" (click)="cancelarNuevo ()"><nb-icon icon="close-circle-outline"></nb-icon></button-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="permiso === true" [nbSpinner]="is_loading_registro" nbSpinnerStatus="primary">
+      <form [formGroup]="form">
+        <div class="form-group">
+          <label for="nombre_completo" class="label">Nombre completo:</label>
+          <input type="text" formControlName="nombre_completo" nbInput fullWidth id="nombre_completo">
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="correo" class="label">Correo:</label>
+              <input type="email" formControlName="correo" nbInput fullWidth id="correo">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="telefono" class="label">Telefono:</label>
+              <input type="text" formControlName="telefono" nbInput fullWidth id="telefono">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="fecha_nacimiento" class="label">Fecha de nacimiento:</label>
+              <input nbInput type="date"
+                formControlName="fecha_nacimiento"
+                fullWidth
+                id="fecha_nacimiento">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="genero" class="label">Genero:</label>
+              <nb-select formControlName="genero" fullWidth>
+                <nb-option value="Masculino">Masculino</nb-option>
+                <nb-option value="Femenino">Femenino</nb-option>
+                <nb-option value="Omitir">Omitir</nb-option>
+              </nb-select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="ocupacion" class="label">Ocupacion:</label>
+          <input type="text" formControlName="ocupacion" nbInput fullWidth id="ocupacion">
+        </div>
+      </form>
+
+      <div class="row">
+        <div class="col-6">
+          <button fullWidth status="danger" nbButton (click)="cancelarNuevo ()">Cancelar</button>
+        </div>
+
+        <div class="col-6">
+          <button fullWidth nbButton (click)="registrar ()" [disabled]="!form.valid">Registrar</button>
+        </div>
+      </div>
+    </div>
+  </nb-card-body>
+
+  <!--nb-card-footer *ngIf="view === 'lista'">
+    <div class="row">
+      <div class="col-9">
+        <button nbButton status="success" fullWidth (click)="cerrar_viaje (dialog_alert)">Procesar lista</button>
+      </div>
+      <div class="col-3">
+        <button nbButton status="danger" fullWidth (click)="eliminar_salida ()">Borrar</button>
+      </div>
+    </div>
+  </nb-card-footer-->
+</nb-card>

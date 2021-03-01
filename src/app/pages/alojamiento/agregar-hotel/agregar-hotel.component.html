@@ -1,0 +1,316 @@
+<div class="row" [nbSpinner]="is_loading" nbSpinnerStatus="primary">
+  <div class="col-lg-6"> 
+    <form [formGroup]="form">
+      <nb-card>
+        <nb-card-header>Agregar nuevo establecimiento de alojamiento</nb-card-header>
+        <nb-card-body>
+          <div class="form-group">
+            <label for="nombrecomercial" class="label">Nombre comercial:</label>
+            <input type="text" formControlName="nombre_comercial" id="nombrecomercial" nbInput fullWidth placeholder="Nombre comercial">
+          </div>
+          
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="razonsocial" class="label">Razón social:</label>
+                <input formControlName="razon_social" type="text" nbInput fullWidth id="razonsocial" placeholder="Razón social">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="ruc" class="label">RUC:</label>
+                <input type="text" formControlName="ruc" nbInput fullWidth id="ruc" placeholder="RUC">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="numero_habitaciones" class="label">Número de habitaciones:</label>
+                <input type="text" formControlName="numero_habitaciones" nbInput fullWidth id="numero_habitaciones" placeholder="Número de habitaciones">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="numero_camas" class="label">Número de camas:</label>
+                <input type="text" formControlName="numero_camas" nbInput fullWidth id="numero_camas" placeholder="Número de camas">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="direccion" class="label">Dirección:</label>
+                <input type="text" formControlName="direccion" nbInput fullWidth id="direccion" placeholder="Dirección">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="telefono" class="label">Teléfono:</label>
+                <input type="text" formControlName="telefono" nbInput fullWidth id="telefono" placeholder="Teléfono">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="paginaweb" class="label">Página web:</label>
+            <input type="text" formControlName="pagina_web" id="paginaweb" nbInput fullWidth placeholder="Número certificado">
+          </div>
+
+          <div class="form-group">
+            <label for="numerocertificado" class="label">Número certificado:</label>
+            <input type="text" formControlName="numero_certificado" id="numerocertificado" nbInput fullWidth placeholder="Número certificado">
+          </div>
+
+          <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="fecha_ins" class="label">Fecha última inspección:</label>
+                  <input 
+                    type="date"
+                    nbInput 
+                    formControlName="fecha_ins"
+                    fullWidth
+                    placeholder="Fecha última inspección"
+                    id="fecha_ins">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="fecha_exp" class="label">Fecha expedición:</label>
+                  <input 
+                    type="date"  
+                    nbInput
+                    fullWidth
+                    formControlName="fecha_exp"
+                    placeholder="Fecha última inspección"
+                    id="fecha_exp">
+                </div>
+              </div>
+            </div>
+
+          <div class="form-group">
+            <label for="clase" class="label">Clase:</label>
+            <select 
+              class="select-css"
+              formControlName="clase" 
+              fullWidth 
+              id="clase"
+              [compareWith]="compareWith">
+              <option *ngFor="let item of clases" [ngValue]="item">
+                {{ item.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group"> 
+            <label for="categoria" class="label">Categoria:</label>
+            <nb-select formControlName="categoria" fullWidth [placeholder]="categoria_placeholder" id="categoria">
+              <nb-option *ngFor="let item of [1, 2, 3, 4, 5]" [value]="item">
+                {{ item }} estrella
+              </nb-option>
+            </nb-select>
+          </div>
+
+          <div class="form-group"> 
+            <label for="provincia" class="label">Provincia:</label>
+            <select class="select-css"
+              formControlName="provincia" 
+              (ngModelChange)="provinciaChanged ($event)"
+              fullWidth 
+              id="provincia"
+              [compareWith]="compareWith">
+              <option *ngFor="let item of provincias" [ngValue]="item">
+                {{ item.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="distrito" class="label">Distrito:</label>
+            <select class="select-css" fullWidth formControlName="distrito" id="distrito" [compareWith]="compareWith">
+              <option *ngFor="let item of distritos" [ngValue]="item">
+                {{ item.nombre }}
+              </option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="complementarios" class="label">Servicios complementarios:</label>
+            <textarea formControlName="servicios_complementarios" rows="5" nbInput fullWidth shape="rectangle" id="complementarios" placeholder="Servicios complementarios"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="observaciones" class="label">Observaciones:</label>
+            <textarea formControlName="observaciones" rows="5" nbInput fullWidth shape="rectangle" id="observaciones" placeholder="Observaciones"></textarea>
+          </div>
+        </nb-card-body>
+      </nb-card>
+      
+      <nb-card>
+        <nb-card-header>Representante legal</nb-card-header>
+        <nb-card-body>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="representante_nombre" class="label">Nombre completo</label>
+                <input type="text" id="representante_nombre" nbInput fullWidth placeholder="" formControlName="representante_nombre">
+              </div>
+            </div>
+  
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="representante_correo" class="label">Correo electronico:</label>
+                <input type="text" id="representante_correo" nbInput fullWidth placeholder="" formControlName="representante_correo">
+              </div>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="representante_tdoc" class="label">Tipo de documento:</label>
+  
+                <nb-select id="representante_tdoc" formControlName="representante_tdoc" fullWidth>
+                  <nb-option value="DNI">DNI</nb-option>
+                  <nb-option value="CE">C.E.</nb-option>
+                </nb-select>
+              </div>
+            </div>
+            
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="representante_ndoc" class="label">Numero de documento</label>
+                <input type="text" id="representante_ndoc" nbInput fullWidth formControlName="representante_ndoc">
+              </div>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="representante_direccion" class="label">Dirección:</label>
+                <input type="text" id="representante_direccion" nbInput fullWidth placeholder="" formControlName="representante_direccion">
+              </div>
+            </div>
+  
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="representante_telefono" class="label">Telefono celular:</label>
+                <input type="text" id="representante_telefono" nbInput fullWidth placeholder="" formControlName="representante_telefono">
+              </div>
+            </div>
+          </div>
+        </nb-card-body>
+      </nb-card>
+
+      <nb-card>
+        <nb-card-header>Datos de acceso</nb-card-header>
+        <nb-card-body>
+          <div class="form-group">
+            <label for="email" class="label">Correo electronico:</label>
+            <input type="text" formControlName="correo" id="email" nbInput fullWidth placeholder="ejemplo@abc.com" (ngModelChange)="validChanged ()">
+            <ng-container *ngIf="is_email_valid === false && this.form.value.correo !== ''">
+              <p class="caption status-danger">
+                Correo electronico en uso!
+              </p>
+            </ng-container>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="label">Contraseña:</label>
+            <input type="text" formControlName="password" id="password" nbInput fullWidth placeholder="********">
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </form>
+  </div>
+
+  <div class="col-lg-6">
+    <nb-card>
+      <nb-card-header>
+        <div class="row">
+          <div class="col-9">
+            Socios
+          </div>
+  
+          <div class="col-3">
+            <button nbButton size="tiny" (click)="agregarRepresentante ()">Agregar</button>
+          </div>
+        </div>
+      </nb-card-header>
+    </nb-card>
+    
+    <nb-card *ngFor="let r of socios">
+      <nb-card-body>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="rnombrecompleto" class="label">Nombre completo</label>
+              <input type="text" id="rnombrecompleto" nbInput fullWidth placeholder="" [(ngModel)]="r.nombre">
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="remail" class="label">Correo electronico:</label>
+              <input type="text" id="remail" nbInput fullWidth placeholder="" [(ngModel)]="r.correo">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="rtdocumento" class="label">Tipo de documento:</label>
+
+              <nb-select id="rtdocumento" [(ngModel)]="r.tdoc" fullWidth>
+                <nb-option value="DNI">DNI</nb-option>
+                <nb-option value="CE">C.E.</nb-option>
+              </nb-select>
+            </div>
+          </div>
+
+          
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="rndocumento" class="label">Numero de documento</label>
+              <input type="text" id="rndocumento" nbInput fullWidth placeholder="" [(ngModel)]="r.ndoc">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="rdireccion" class="label">Dirección:</label>
+              <input type="text" id="rdireccion" nbInput fullWidth placeholder="" [(ngModel)]="r.direccion">
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="rtcelular" class="label">Telefono celular:</label>
+              <input type="text" id="rtcelular" nbInput fullWidth placeholder="" [(ngModel)]="r.telefono">
+            </div>
+          </div>
+        </div>
+
+        <button nbButton size="small" status="danger"  (click)="eliminarRepresentante (r)">Eliminar</button>
+      </nb-card-body>
+    </nb-card>
+
+    <div class="row">
+      <div class="col-6">
+        <button nbButton fullWidth status="danger">Cancelar</button>
+      </div>
+
+      <div class="col-6">
+        <button nbButton fullWidth status="primary" [disabled]="!form.valid" (click)="submit ()">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>
